@@ -1,3 +1,9 @@
+# Example .gitignore content
+.venv/
+# Other ignored files/directories
+*.pyc
+__pycache__/
+
 # Logs
 logs
 *.log

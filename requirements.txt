@@ -1,4 +1,10 @@
+# Basic Setup
 flask 
-flask_sqlalchemy 
 spotipy 
 python-dotenv
+
+# Libraries for socket.io
+flask-socketio
+socket.io-client
+redis 
+eventlet 
