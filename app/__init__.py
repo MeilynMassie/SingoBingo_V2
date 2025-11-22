@@ -8,8 +8,8 @@ def create_app():
     app.config['SECRET_KEY'] = 'secret!'
 
     # Register blueprints
-    from app.blueprints.routes import main
-    app.register_blueprint(main)
+    # from app.blueprints.routes import main
+    # app.register_blueprint(main)
 
     from app.blueprints.login import login_bp
     app.register_blueprint(login_bp)
