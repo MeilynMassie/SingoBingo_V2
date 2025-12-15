@@ -1,0 +1,49 @@
+HTML TEMPLATES
+/testPage --> test_page
+/login --> login
+/playlists --> spotify
+
+
+{'items': [
+    {'track': {'name': "I'll Make a Man Out of You", 'uri': 'spotify:track:28UMEtwyUUy5u0UWOVHwiI'}},
+    {'track': {'name': 'Zero To Hero', 'uri': 'spotify:track:4zDfgax6Ihb0UWdour1ZEs'}},
+    {'track': {'name': 'I\'ve Got a Dream - From "Tangled"/Soundtrack Version', 'uri': 'spotify:track:0TCt7OFRdD8PQ6vTRQxNgQ'}},
+    {'track': {'name': 'Dig a Little Deeper', 'uri': 'spotify:track:7kh64k3P9Fk4EsA6vOdwmj'}},
+    {'track': {'name': "I Just Can't Wait to Be King", 'uri': 'spotify:track:0qxtQ8rf3W1nId3D2r0xH4'}},
+    {'track': {'name': 'The Bare Necessities', 'uri': 'spotify:track:6fIKi0kU1gZwyNGMlE4Zl6'}},
+    {'track': {'name': 'Gaston', 'uri': 'spotify:track:1v7HQKegIjcBAsAsHjnXZU'}},
+    {'track': {'name': 'Part of Your World', 'uri': 'spotify:track:7tUSJY4nsDBJTjd1UXKRsT'}},
+    {'track': {'name': 'Love Is an Open Door - From "Frozen"/Soundtrack Version', 'uri': 'spotify:track:3IPnBzGRMg6BfViFxxa0Gq'}},
+    {'track': {'name': 'Go the Distance', 'uri': 'spotify:track:0D1OY0M5A0qD5HGBvFmFid'}},
+    {'track': {'name': 'When I Am Older', 'uri': 'spotify:track:1Tt7zr1yDbKbT8L4jzSZ74'}},
+    {'track': {'name': 'Friend Like Me', 'uri': 'spotify:track:5f2TWu6R2YYCJtLQ0fP78H'}},
+    {'track': {'name': "She's In Love", 'uri': 'spotify:track:5eHx8TOZ7UIQLtd6aUWKkK'}},
+    {'track': {'name': "I Won't Say (I'm In Love)", 'uri': 'spotify:track:0PKmDncVOiNQLO6D1P6PXi'}},
+    {'track': {'name': 'Down in New Orleans', 'uri': 'spotify:track:4tCdoXt7EiwZZhMevxmY8u'}},
+    {'track': {'name': 'The Gospel Truth I / Main Titles - Hercules', 'uri': 'spotify:track:6uW03WHG3qv2FzxPIW6SUP'}},
+    {'track': {'name': 'The Gospel Truth II', 'uri': 'spotify:track:7f0U9m3XLABHS36uUeV8JU'}},
+    {'track': {'name': 'The Gospel Truth III', 'uri': 'spotify:track:1VWHn9cg9EJFWNjQ0ARRnT'}},
+    {'track': {'name': 'Hakuna Matata', 'uri': 'spotify:track:5k3U0OGYBccHdKJJu3HrUN'}},
+    {'track': {'name': 'Prince Ali', 'uri': 'spotify:track:6q2r0n2ph4w2p7fLbh5TKK'}},
+    {'track': {'name': 'Almost There', 'uri': 'spotify:track:2GLyruWagsv8o7aGNXboH1'}},
+    {'track': {'name': 'When Will My Life Begin? - From "Tangled" / Soundtrack Version', 'uri': 'spotify:track:03xWMkKEbeO4SnylA53ipj'}},
+    {'track': {'name': 'Be Our Guest', 'uri': 'spotify:track:6btdYzQ8eZFBrOlUKVHuz0'}},
+    {'track': {'name': 'Touch The Sky - From "Brave"/Soundtrack', 'uri': 'spotify:track:5yyqx4brn6Bm9U1Rj9ENnz'}},
+    {'track': {'name': 'I See the Light - From "Tangled" / Soundtrack Version', 'uri': 'spotify:track:6klpXs2uAjagnZMFkt4qkl'}},
+    {'track': {'name': 'Reflection', 'uri': 'spotify:track:2AILbz83cBnrAMAG06rZts'}},
+    {'track': {'name': "You'll Be In My Heart", 'uri': 'spotify:track:4Y8vb1uy9IjM2V1hqvrAid'}},
+    {'track': {'name': 'Show Yourself', 'uri': 'spotify:track:50WeOnXhM1H7AZEeIDoWfZ'}},
+    {'track': {'name': 'A Girl Worth Fighting For', 'uri': 'spotify:track:3wjgPeXocinhLyPL37p70e'}},
+    {'track': {'name': 'Into the Unknown', 'uri': 'spotify:track:3Z0oQ8r78OUaHvGPiDBR3W'}},
+    {'track': {'name': 'Honor To Us All', 'uri': 'spotify:track:78EMhiyAcalWWtnpk20Eoo'}},
+    {'track': {'name': 'Kiss the Girl', 'uri': 'spotify:track:4HGIPyqDxSf863tPOwXiLJ'}},
+    {'track': {'name': 'One Jump Ahead', 'uri': 'spotify:track:4wN8Ov3kPZdkJ8XcYxYUGz'}},
+    {'track': {'name': 'Poor Unfortunate Souls', 'uri': 'spotify:track:7zsw78LtXUD7JfEwH64HK2'}},
+    {'track': {'name': 'For the First Time in Forever - From "Frozen"/Soundtrack Version', 'uri': 'spotify:track:70b5Sq3ePOu3Gqg0hjlOtR'}},
+    {'track': {'name': 'Lost in the Woods', 'uri': 'spotify:track:7namdlOhbtsc8FvoSafOQt'}},
+    {'track': {'name': 'A Whole New World', 'uri': 'spotify:track:5VIfacsWytkcgr7aTt8Tql'}},
+    {'track': {'name': 'In Summer - From "Frozen"/Soundtrack Version', 'uri': 'spotify:track:7bG6SQBGZthPDG5QJL5Gf7'}},
+    {'track': {'name': "I Wan'na Be Like You (The Monkey Song)", 'uri': 'spotify:track:2EeVPGHq2I7fjeDfT6LEYX'}},
+    {'track': {'name': 'Mother Knows Best - From "Tangled"/Soundtrack Version', 'uri': 'spotify:track:1lOSxJNCLvWm2bYaTcTSmK'}},
+    {'track': {'name': 'Unmeltable Me - Outtake', 'uri': 'spotify:track:09MvGKcju2jf2ktxDa0s17'}}
+]}

@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 from dotenv import load_dotenv
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
-from app.services.db import db_get_playlists, db_get_connection, db_get_playlist_by_id, db_get_playlist_details
+from app.services.db import db_get_playlist_details
 
 # Define the blueprint
 test_page_bp = Blueprint('testPage', __name__)

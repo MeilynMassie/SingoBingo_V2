@@ -3,18 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singo Bingo</title>
+    <title>Spotify PAGE</title>
   </head>
   <body>
-    <h1>My Spotify Playlists</h1>
+    <h1>Spotify PAGE</h1>
 
     {% if playlists %}
       <ul>
         {% for playlist in playlists %}
-          <li>
-            <a href="{{ playlist.url }}" target="_blank">{{ playlist.name }}</a>
-            <small>({{ playlist.uri }})</small>
-          </li>
+          <li>{{ playlist }}</li>
         {% endfor %}
       </ul>
     {% else %}

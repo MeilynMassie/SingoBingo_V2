@@ -11,10 +11,7 @@
     {% if playlists %}
       <ul>
         {% for playlist in playlists %}
-          <li>
-            <a href="{{ playlist }}" target="_blank">{{ playlist }}</a>
-            <small>({{ playlist }})</small>
-          </li>
+          <li>{{ playlist }}</li>
         {% endfor %}
       </ul>
     {% else %}
