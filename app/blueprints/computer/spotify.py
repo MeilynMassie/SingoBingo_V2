@@ -3,14 +3,14 @@ from flask import Blueprint, render_template, session
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
+import psycopg2
+
 
 # Define the blueprint
 spotify_bp = Blueprint('spotify', __name__)
 
 @spotify_bp.route('/playlists')
-def get_playlists():
-    print("TOKEN:", session.get("spotify_token"))
-
+def spotify_get_playlists():
     load_dotenv()  # Make sure .env is loaded
 
     sp = Spotify(auth_manager=SpotifyOAuth(
@@ -23,7 +23,6 @@ def get_playlists():
 
     user = sp.current_user()
     print(f"User ID: {user['id']}, User Display Name: {user['display_name']}")
-
     playlists = sp.current_user_playlists()
     playlist_data = []
 

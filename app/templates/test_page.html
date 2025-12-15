@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST PAGE</title>
+  </head>
+  <body>
+    <h1>TEST PAGE</h1>
+
+    {% if playlists %}
+      <ul>
+        {% for playlist in playlists %}
+          <li>
+            <a href="{{ playlist }}" target="_blank">{{ playlist }}</a>
+            <small>({{ playlist }})</small>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No playlists found.</p>
+    {% endif %}
+  </body>
+</html>
