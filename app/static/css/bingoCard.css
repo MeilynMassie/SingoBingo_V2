@@ -1,0 +1,13 @@
+#playlist-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+#playlist-list li {
+  background: #eee;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+}

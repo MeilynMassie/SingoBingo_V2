@@ -1,6 +1,6 @@
 HTML TEMPLATES
 /testPage --> test_page
-/login --> login
+/ (or) /login--> login
 /playlists --> spotify
 
 

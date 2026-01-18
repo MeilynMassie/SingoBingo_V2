@@ -4,13 +4,13 @@ from flask_socketio import SocketIO
 from app.services.db import db_add_user
 
 # Define the blueprint
-login_bp = Blueprint('login', __name__)
+welcome_bp = Blueprint('welcome', __name__)
 
-@login_bp.route('/')
-@login_bp.route('/login')
-def login():
+@welcome_bp.route('/')
+@welcome_bp.route('/welcome')
+def welcome():
     
-    return render_template('join.html', lobby_code=generateLobbyCode())
+    return render_template('welcome.html', lobby_code=generateLobbyCode())
 
 def generateLobbyCode():
     faker = Faker()
