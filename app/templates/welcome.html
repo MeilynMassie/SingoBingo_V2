@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singo Bingo</title>
+  </head>
+  <body>
+    <h1>Welcome to Singo Bingo</h1>
+    {% if error %}
+        <p style="color:red">{{ error }}</p>
+    {% endif %}
+    <h1>LOBBY CODE: {{lobby_code}} </h1>
+  </body>
+</html>
