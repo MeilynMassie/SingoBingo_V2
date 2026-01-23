@@ -1,5 +1,10 @@
 console.log("Bingo Card JS Loaded");
 
+function songTileClicked(event) {
+    console.log("Song tile clicked: ", event.target.id);
+    event.target.classList.toggle('marked');
+}
+
 // Fetch JSON data from the server (spotify.py)
 fetch('/api/playlists')
     .then(response => response.json())
@@ -22,7 +27,8 @@ fetch('/api/playlists')
             const tile = document.createElement('div');
             tile.className = 'song-tile';
             tile.id = song;
-            tile.textContent = song; // adjust fields as necessary
+            tile.textContent = song;
+            tile.addEventListener('click', songTileClicked);
             card.appendChild(tile);
         });
     })
