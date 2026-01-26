@@ -1,7 +1,7 @@
 #OVERVIEW: Login page for user to create username, join lobby, and pick an avatar
 from pathlib import Path
 from flask import Blueprint, render_template, jsonify, request
-from app.services.db import db_add_user, db_get_avatars
+from app.services.db import db_add_user, db_get_avatars, db_add_user_avatar
 from app.blueprints.welcome import generateLobbyCode
 
 login_bp = Blueprint('login', __name__)
@@ -30,7 +30,7 @@ def add_avatar_selected():
     print(f"Avatar selected: {avatar_id}")
     if not username or not avatar_id:
         return jsonify({"ok": False, "error": "Missing username or avatar_id"}), 400
-    db_add_user(username, avatar_id)
+    db_add_user_avatar(username, avatar_id)
     return jsonify({"ok": True})  
 
 @login_bp.route('/db/GetAvatarImages')

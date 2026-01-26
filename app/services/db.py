@@ -53,32 +53,32 @@ def db_get_playlist_details(column_name):
 def db_add_user(username, lobby_code):
     print("Adding user to DB...")
     print(f"Username: {username}, Lobby Code: {lobby_code}")
-    # cur = db_get_connection()
-    # cur.execute("""
-    # INSERT INTO users (username, lobby_code) VALUES (%s, %s);
-    # """, (username, lobby_code))
-    # cur.connection.commit()
-    # cur.close()
-    # cur.connection.close() 
+    cur = db_get_connection()
+    cur.execute("""
+    INSERT INTO users (username, lobby_code) VALUES (%s, %s);
+    """, (username, lobby_code))
+    cur.connection.commit()
+    cur.close()
+    cur.connection.close() 
 
-# User annd Avatar Update
+# User and Avatar Update
 def db_add_user_avatar(username, avatar_id):
-    # cur = db_get_connection()
+    cur = db_get_connection()
     print("Updating avatar taken status in DB...")
     print(f"Avatar ID: {avatar_id}")
-    # cur.execute("""
-    # UPDATE avatars SET taken = 1 WHERE id = %s;
-    # """, (avatar_id))
-    # cur.connection.commit()
+    cur.execute("""
+    UPDATE avatars SET taken = 1 WHERE avatar_id = %s;
+    """, (avatar_id,))
+    cur.connection.commit()
 
     print("Adding user with avatar to DB...")
-    # cur.execute("""
-    # UPDATE avatars SET avatar_id=%s
-    #     WHERE LOWER(username) = LOWER(%s);
-    # """, (avatar_id, username))
-    # cur.connection.commit()
-    # cur.close()
-    # cur.connection.close()
+    cur.execute("""
+    UPDATE users SET avatar_id=%s
+        WHERE LOWER(username) = LOWER(%s);
+    """, (avatar_id, username))
+    cur.connection.commit()
+    cur.close()
+    cur.connection.close()
 
 # Avatars Queries
 def db_get_avatars():
@@ -93,7 +93,7 @@ def db_get_avatars():
     cur.connection.close()
     return results
 
-# Add a trigger to know when a user is added to that lobby for the circle of avatars to display
+# TODO: Add a trigger to know when a user is added to that lobby for the circle of avatars to display
 # def db_get_users_by_lobby_code(lobby_code):
 #     print("Fetching users by lobby code from DB...")
 #     cur = db_get_connection()

@@ -7,16 +7,14 @@
     </head>
     <body>
         <input type="hidden" id="lobby_code" value="{{ lobby_code }}">
-        <input type="hidden" id="username" value="{{ username }}">
-        <input type="hidden" id="avatar_id" value="{{ avatar_id }}">
         <div id="joinLobbyContainer">
             <h1>Join Lobby</h1>
             {% if error %}
                 <p style="color:red">{{ error }}</p>
             {% endif %}
             <h1>LOBBY CODE: {{lobby_code}} </h1>
-            <div id="loginForm">
-                <form method="POST">
+            <div id="loginFormContainer">
+                <form id="loginForm" method="POST">
                     <input 
                         name="username" 
                         id="username" 
@@ -31,7 +29,7 @@
                         maxlength="5"
                         />
                     <br/>
-                    <button type="submit" id="submit">Join Lobby</button>
+                    <button type="submit" id="submit_login">Join Lobby</button>
                 </form>
             </div>
         </div>
