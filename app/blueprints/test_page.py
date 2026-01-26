@@ -8,7 +8,7 @@ from app.services.db import db_get_playlist_details
 # Define the blueprint
 test_page_bp = Blueprint('testPage', __name__)
 
-@test_page_bp.route('/testPage')
+@test_page_bp.route('/test')
 def testPage():
     details = db_get_playlist_details('playlist_name')
     print(f'Playlist Names from details function: {details}')

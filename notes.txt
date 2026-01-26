@@ -1,0 +1,4 @@
+pip freeze > requirements.txt
+source .venv/bin/activate
+
+Single params in DB have to have trailing comma. Python will interpert as an int instead of tuple which is needed to run in db 

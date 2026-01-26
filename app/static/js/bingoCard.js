@@ -1,11 +1,9 @@
-console.log("Bingo Card JS Loaded");
-
 function songTileClicked(event) {
     console.log("Song tile clicked: ", event.target.id);
     event.target.classList.toggle('marked');
 }
 
-// Fetch JSON data from the server (spotify.py)
+// Fetch Playlist JSON and build bingo card
 fetch('/api/playlists')
     .then(response => response.json())
     .then(playlist => {
