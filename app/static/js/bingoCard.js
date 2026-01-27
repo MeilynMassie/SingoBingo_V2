@@ -4,7 +4,7 @@ function songTileClicked(event) {
 }
 
 // Fetch Playlist JSON and build bingo card
-fetch('/api/playlists')
+fetch('/spotify/playlists')
     .then(response => response.json())
     .then(playlist => {
         console.log(playlist);

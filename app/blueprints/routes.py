@@ -1,30 +1,29 @@
-# ONLY PUT STATIC FILES IN ROUTES.PY
-# IT OVERRIDES THE BLUEPRINT ROUTES 
+# OVERVIEW: Contains routes that only render templates for now 
+from flask import Blueprint, render_template
+from app.blueprints.login import generateLobbyCode
 
+main = Blueprint("main", __name__)
+lobbyCode = generateLobbyCode()
 
+# Starting point for the computer
+@main.route('/welcome')
+def welcome():
+    return render_template('welcome.html', lobby_code=lobbyCode)
 
-# # app/routes.py
-# from flask import Blueprint, render_template, request, jsonify
+# Starting point for players on phones
+# @main.route('/')
+@main.route('/login')
+def login():
+    return render_template('login.html', lobby_code=lobbyCode)
 
-# main = Blueprint("main", __name__)
+# Render bingo card
+@main.route('/bingocard')
+def generate_bingo_card():
+    print("Rendering bingo card...")
+    return render_template('bingo_card.html')
 
-# @main.route("/")
-# def index():
-#     return render_template("index.html")
-
-# @main.route("/login")
-# def login():
-#     return render_template("login.html")
-
-# @main.route("/playlists")
-# def playlists():
-#     return render_template("spotify.html")
-
-# @main.route("/join")
-# def join():
-#     return render_template("join.html")
-
-# @main.route("/api/test", methods=["POST"])
-# def test_api():
-#     data = request.json
-#     return jsonify({"received": data})
+# Starts playing music
+@main.route('/')
+@main.route("/startGame")
+def start_game():
+    return render_template("start_game.html")

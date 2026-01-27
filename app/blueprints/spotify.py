@@ -1,30 +1,15 @@
 #OVERVIEW: All spotiPy related functions
-import os
-from flask import Blueprint, render_template, jsonify
-from spotipy import Spotify
 import random
-from spotipy.oauth2 import SpotifyOAuth
+from flask import Blueprint, jsonify, session, render_template
 from app.services.db import db_get_playlist_details
-from dotenv import load_dotenv
+from app.blueprints.spotifyOAuth import get_spotify_client
 # import psycopg2
 
 spotify_bp = Blueprint('spotify', __name__)
 
 # Fetch playlists from Spotify and add songs to DB
-@spotify_bp.route('/api/playlists')
+@spotify_bp.route('/spotify/playlists')
 def spotify_get_playlists():
-    print("Fetching playlists from Spotify...")
-    load_dotenv()
-
-    # Initialize Spotify client
-    sp = Spotify(auth_manager=SpotifyOAuth(
-        client_id=os.getenv('SPOTIFY_CLIENT_ID'),
-        client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'),
-        redirect_uri=os.getenv('SPOTIFY_REDIRECT_URI'),
-        scope="playlist-read-private"
-    ))
-    print("Spotify client initialized.")
-
     # Fetch playlists from db
     details = db_get_playlist_details('playlist_uri')
     playlist_id = details[0]
@@ -55,16 +40,13 @@ def spotify_get_playlists():
     print(playlist)
     return jsonify(playlist)
 
-# Render bingo card
-@spotify_bp.route('/bingocard')
-def generate_bingo_card():
-    print("Rendering bingo card...")
-    return render_template('bingo_card.html')
-
-# TODO NEXT: Play song from playlist
-@spotify_bp.route('/playsong')
+# TODO NEXT: Play song from playlist (NOT HARDCOODED)
+# TODO: Start playing from the most popular parts of the song
+@spotify_bp.route('/spotify/playsong')
 def play_song():
-    print("Playing song...")
-    # sp.start_playback(uris=track_uri)  
-    # sp.start_playback(uris='spotify:track:09MvGKcju2jf2ktxDa0s17')  
-    # print(f'Playing song: {song}')
+    songName = "Takedown - Instrumental"
+    sp = get_spotify_client(session.get("spotify_token"))
+    sp.start_playback(
+        uris=["spotify:track:0SdkWJzc4T1ck7tD6lV2Kw"]
+    )
+    return render_template('start_game.html', song=songName)

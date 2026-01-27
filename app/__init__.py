@@ -9,14 +9,17 @@ def create_app():
     app.config['SECRET_KEY'] = 'secret!'
 
     # Register blueprints
-    from app.blueprints.welcome import welcome_bp
-    app.register_blueprint(welcome_bp)
-
     from app.blueprints.login import login_bp
     app.register_blueprint(login_bp)
 
+    from app.blueprints.spotifyOAuth import spotifyOAuth_bp
+    app.register_blueprint(spotifyOAuth_bp)
+
     from app.blueprints.spotify import spotify_bp
     app.register_blueprint(spotify_bp)
+
+    from app.blueprints.routes import main
+    app.register_blueprint(main)
 
 
     # Attach Socket.IO (no sockets running yet)

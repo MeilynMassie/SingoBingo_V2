@@ -1,3 +1,4 @@
+<!-- OVERVIEW: Allows user -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,11 +8,13 @@
     </head>
     <body>
         <input type="hidden" id="lobby_code" value="{{ lobby_code }}">
+        <!-- Login form to add user to db and verify lobby code -->
         <div id="joinLobbyContainer">
             <h1>Join Lobby</h1>
             {% if error %}
                 <p style="color:red">{{ error }}</p>
             {% endif %}
+            <!-- TODO: Delete lobbycode later (provided by computer) -->
             <h1>LOBBY CODE: {{lobby_code}} </h1>
             <div id="loginFormContainer">
                 <form id="loginForm" method="POST">
@@ -33,6 +36,7 @@
                 </form>
             </div>
         </div>
+        <!-- Displays avatars not taken -->
         <div id="avatarSelectionContainer" hidden>
             <h1>Select Your Avatar</h1>
             <h3>Choose Wisely</h3>

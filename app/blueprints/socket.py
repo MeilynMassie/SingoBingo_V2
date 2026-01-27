@@ -1,3 +1,4 @@
+# OVERVIEW: All socketio related things
 from app import socketio
 from flask_socketio import emit
 
