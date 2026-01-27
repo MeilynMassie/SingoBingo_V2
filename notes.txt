@@ -1,4 +1,14 @@
-pip freeze > requirements.txt
-source .venv/bin/activate
+PSYCOPG2 NUANCES
+- Single params in DB have to have trailing comma. Python will interpert as an int 
+  instead of tuple which is needed to run in db 
 
-Single params in DB have to have trailing comma. Python will interpert as an int instead of tuple which is needed to run in db 
+
+MAKEFILE NOTES
+- .PHONY: In case the command is the name of a file
+- &: Runs the next line immediately instead of waiting for it to close
+- Doesn't run in venvs so you have to specify in the command
+
+
+FOR TESTING LOCALLY WIHTOUT RUNNING FLASK 
+- Run > make test
+- Use keyword "assert" to return more detailed errors or use pytest

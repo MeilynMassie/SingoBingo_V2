@@ -1,7 +1,11 @@
 #OVERVIEW: Login page for user to create username, join lobby, and pick an avatar
 from faker import Faker
 from flask import Blueprint, jsonify, request
-from app.services.db import db_add_user, db_get_avatars, db_add_user_avatar
+from app.services.db import (
+    db_add_user, 
+    db_get_avatars, 
+    db_add_user_avatar
+)
 
 login_bp = Blueprint('login', __name__)
 

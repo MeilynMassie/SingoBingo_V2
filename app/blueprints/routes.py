@@ -5,6 +5,11 @@ from app.blueprints.login import generateLobbyCode
 main = Blueprint("main", __name__)
 lobbyCode = generateLobbyCode()
 
+# Testing page
+@main.route('/testPage')
+def test_page():
+    return render_template('test_page.html')
+
 # Starting point for the computer
 @main.route('/welcome')
 def welcome():
