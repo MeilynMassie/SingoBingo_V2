@@ -2,7 +2,7 @@
 PYTHON := .venv/bin/python
 FLASK  := .venv/bin/flask
 PIP := .venv/bin/pip
-APP_URL := http://127.0.0.1:5000
+APP_URL := http://127.0.0.1:5000/startGame
 
 # Initial setup
 setup:
@@ -26,8 +26,16 @@ test:
 
 # So I don't have to use the GUI anymore to debug
 debug:
-	@$(PYTHON) -m webbrowser $(APP_URL) &
-	FLASK_APP=run.py FLASK_ENV=development FLASK_DEBUG=1 $(FLASK) run
+	@lsof -ti:5000 | xargs kill || true
+	@echo "🚀 Starting Flask (debug + reload)..."
+	FLASK_APP=run.py \
+	FLASK_ENV=development \
+	FLASK_DEBUG=1 \
+	$(FLASK) run --reload --debugger &
+	@sleep 1
+	@$(PYTHON) -m webbrowser $(APP_URL)
+	@wait
+
 
 # TODO: AWS EB
 eb:

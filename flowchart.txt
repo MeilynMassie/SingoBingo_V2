@@ -1,0 +1,5 @@
+COMPUTER
+    mainMenu --> lobby --> startGame
+
+MOBILE 
+    login --> bingoCard --> gameOver

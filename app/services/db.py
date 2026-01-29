@@ -1,6 +1,5 @@
 #OVERVIEW: All DB related stuff
 import os
-import random
 import psycopg2
 from dotenv import load_dotenv
 
@@ -50,19 +49,41 @@ def db_get_playlist_details(column_name):
     cur.close()
     return result
 
-# Users Queries
+# Players Queries
 def db_add_user(username, lobby_code):
     print("Adding user to DB...")
     print(f"Username: {username}, Lobby Code: {lobby_code}")
     cur = db_get_connection()
     cur.execute("""
-    INSERT INTO users (username, lobby_code) VALUES (%s, %s);
+    INSERT INTO players (username, lobby_code) VALUES (%s, %s);
     """, (username, lobby_code))
     cur.connection.commit()
     cur.close()
     cur.connection.close() 
 
-# User and Avatar Update
+# Lobby Queries
+def db_create_lobby(lobbyCode, gameMode):
+    print("Adding lobby code to db...")
+    print(f"Lobby Code: {lobbyCode}, Game Mode: {gameMode}")
+    # cur = db_get_connection()
+    # cur.execute("""
+    # INSERT INTO lobbies (lobby_code, game_mode) VALUES (%s, %s);
+    # """, (lobbyCode, gameMode))
+    # cur.connection.commit()
+    # cur.close()
+    # cur.connection.close() 
+
+# def db_add_lobby_code_and_playlist_id(lobbyCode, playlistId):
+#     print("Adding lobby code to db...")
+#     cur = db_get_connection()
+#     cur.execute("""
+#     INSERT INTO players (username, lobby_code) VALUES (%s, %s);
+#     """, (lobbyCode, playlistId))
+#     cur.connection.commit()
+#     cur.close()
+#     cur.connection.close() 
+
+# Players and Avatars Update
 def db_add_user_avatar(username, avatar_id):
     cur = db_get_connection()
     print("Updating avatar taken status in DB...")
@@ -74,7 +95,7 @@ def db_add_user_avatar(username, avatar_id):
 
     print("Adding user with avatar to DB...")
     cur.execute("""
-    UPDATE users SET avatar_id=%s
+    UPDATE players SET avatar_id=%s
         WHERE LOWER(username) = LOWER(%s);
     """, (avatar_id, username))
     cur.connection.commit()
@@ -82,12 +103,13 @@ def db_add_user_avatar(username, avatar_id):
     cur.connection.close()
 
 # Avatars Queries
+# TODO: Ignore taken for now
 def db_get_avatars():
     print("Fetching all avatars from DB...")
     cur = db_get_connection()
     cur.execute("""
         SELECT * FROM avatars
-        WHERE taken = 0;
+        --WHERE taken = 0;
     """)
     results = cur.fetchall()
     cur.close()
@@ -95,10 +117,3 @@ def db_get_avatars():
     return results
 
 # TODO: Add a trigger to know when a user is added to that lobby for the circle of avatars to display
-# def db_get_users_by_lobby_code(lobby_code):
-#     print("Fetching users by lobby code from DB...")
-#     cur = db_get_connection()
-#     cur.execute("""
-#     SELECT * FROM users WHERE id = %s;
-#     """, (lobby_code,))
-#     return cur.fetchall()

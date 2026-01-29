@@ -5,12 +5,16 @@ fetch('/spotify/playlists/classicMode')
         // Display lists of playlist options for user to select
         const playlistSelectionContainer = document.getElementById('playlist-selection-container');
         playlists.forEach(playlist => {
-            console.log(playlist.id)
-            console.log(playlist.playlist_id)
-            console.log(playlist.playlist_name)
             const playlistCell = document.createElement('div');
-            playlistCell.id = [playlist.id, playlist.playlist_id];
+            playlistCell.dataset.id = playlist.id;
+            playlistCell.dataset.playlistId = playlist.playlist_id;
+            playlistCell.dataset.name = playlist.playlist_name;
             playlistCell.textContent = playlist.playlist_name;
+            playlistCell.addEventListener('click', () => {
+                console.log(`Playlist Name: ${playlist.id}`);
+                console.log(`Playlist Name: ${playlist.playlist_id}`);
+                console.log(`Playlist Name: ${playlist.playlist_name}`);
+            });
             playlistSelectionContainer.appendChild(playlistCell);
         });
     })

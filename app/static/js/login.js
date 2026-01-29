@@ -14,6 +14,29 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
     }
 });
 
+
+function addUser(username, lobbyCode) {
+    console.log(`Username: ${username}, Lobby Code: ${lobbyCode}`);
+
+    fetch("/db/createUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: username,
+            lobby_code: lobbyCode
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                console.log("User added!");
+            } else {
+                console.error("Error:", data.error);
+            }
+        });
+}
+
+
 function addAvatarToUser(avatarId) {
     const username = document.getElementById("username").value;
     console.log(`Selected Avatar ID: ${avatarId} for user: ${username}`);
@@ -38,31 +61,11 @@ function addAvatarToUser(avatarId) {
         });
 }
 
-function addUser(username, lobbyCode) {
-    console.log(`Username: ${username}, Lobby Code: ${lobbyCode}`);
-
-    fetch("/db/createUser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            username: username,
-            lobby_code: lobbyCode
-        })
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (data.ok) {
-                console.log("User added!");
-            } else {
-                console.error("Error:", data.error);
-            }
-        });
-}
 
 function showAvatarSelection() {
     document.getElementById('join-lobby-container').hidden = true;
-    document.getElementById('avatar-selection-container').hidden = false;
-    const avatarDiv = document.getElementById('avatar-selection')
+    const avatarDiv = document.getElementById('avatar-selection-container')
+    avatarDiv.hidden = false;
     // Fetches avatar images from server
     fetch('/db/GetAvatarImages')
         .then(response => response.json())
@@ -74,7 +77,29 @@ function showAvatarSelection() {
                 imgElement.src = avatar.filePath;
                 imgElement.id = avatar.id;
                 imgElement.className = 'avatar-image';
-                imgElement.onclick = function () { addAvatarToUser(avatar.id); };
+                imgElement.addEventListener('click', () => {
+                    const username = document.getElementById("username").value;
+                    console.log(`Selected Avatar ID: ${avatar.id} for user: ${username}`);
+
+                    fetch("/db/addAvatarSelected", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            username: username,
+                            avatar_id: avatar.id
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.ok) {
+                                console.log("Avatar saved!");
+                                console.log("Redirecting to /bingoCard");
+                                window.location.href = "/bingoCard";
+                            } else {
+                                console.error("Error:", data.error);
+                            }
+                        });
+                });
                 avatarDiv.appendChild(imgElement);
             });
         })

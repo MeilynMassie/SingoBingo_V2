@@ -1,0 +1,37 @@
+<!-- OVERVIEW: Main Menu -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/mainMenu.css">
+    <title>Singo Bingo</title>
+  </head>
+  <body>
+    <!-- Greets players and show lobby code -->
+    <h1>Welcome to Singo Bingo</h1>
+    <div id="main-menu-container">
+      <button data-action="new">New Game</button>
+      <button data-action="options">Options</button>
+      <button data-action="exit">Exit</button>
+    </div>
+
+    <div id="game-mode-container" hidden>
+      <h3>Select Game Mode</h3>
+      <button data-action="singleplayer-mode" id="singleplayer" name="singleplayer">Single Player</button>
+      <button data-action="multiplayer-mode" id="multiplayer" name="multiplayer">Multiplayer</button>
+      <button data-action="back">Back</button>
+    </div>
+    <div id="playlist-mode-container" hidden>
+      <button data-action="classic-mode" id="classic" name="classic">Classic</button>
+      <button data-action="genere-mode" id="genere" name="genere">Genere</button>
+      <button data-action="album-mode" id="album" name="album">Album</button>
+      <button data-action="artists-mode" id="artists" name="artists">Artists</button>
+      <button data-action="all-mode" id="all" name="all">See All Playlists</button>
+      <button data-action="search-mode" id="search" name="search">Search</button>
+      <button data-action="back">Back</button>
+    </div>
+    <script src="{{ url_for('static', filename='js/mainMenu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/general.js') }}"></script>
+  </body>
+</html>

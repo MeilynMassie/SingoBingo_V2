@@ -4,7 +4,8 @@ from flask import Blueprint, jsonify, request
 from app.services.db import (
     db_add_user, 
     db_get_avatars, 
-    db_add_user_avatar
+    db_add_user_avatar,
+    db_create_lobby
 )
 
 login_bp = Blueprint('login', __name__)
@@ -13,8 +14,15 @@ def generateLobbyCode():
     faker = Faker()
     lobby_code = faker.bothify(text='?????', letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
     print(f'Generated Lobby Code: {lobby_code}')
-
     return lobby_code
+
+@login_bp.route('/lobbies', methods=['POST'])
+def create_lobby():
+    lobbyCode = generateLobbyCode()
+    db_create_lobby(lobbyCode=lobbyCode, gameMode='Classic')
+    return jsonify({
+        "lobby_code": lobbyCode
+    })
 
 # Adds user in db
 @login_bp.route('/db/createUser', methods=['POST'])
@@ -44,6 +52,7 @@ def add_avatar_selected():
 @login_bp.route('/db/GetAvatarImages')
 def get_avatar_images():
     avatars = db_get_avatars()
+    print(avatars)
     avatar_list = [{'id': avatar[0], 'filePath': 'static/imgs/avatars/'+avatar[1]} for avatar in avatars]
     return jsonify(avatar_list)
 
