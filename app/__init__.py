@@ -12,6 +12,9 @@ def create_app():
     from app.blueprints.routes import main
     app.register_blueprint(main)
 
+    from app.blueprints.mainMenu import mainMenu_bp
+    app.register_blueprint(mainMenu_bp)
+
     from app.blueprints.login import login_bp
     app.register_blueprint(login_bp)
 

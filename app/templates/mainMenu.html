@@ -4,24 +4,25 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/mainMenu.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainMenu.css') }}">
     <title>Singo Bingo</title>
   </head>
   <body>
-    <!-- Greets players and show lobby code -->
+    <!-- Greets players -->
     <h1>Welcome to Singo Bingo</h1>
     <div id="main-menu-container">
       <button data-action="new">New Game</button>
       <button data-action="options">Options</button>
       <button data-action="exit">Exit</button>
     </div>
-
+    <!-- Select single or multiplayer -->
     <div id="game-mode-container" hidden>
       <h3>Select Game Mode</h3>
       <button data-action="singleplayer-mode" id="singleplayer" name="singleplayer">Single Player</button>
       <button data-action="multiplayer-mode" id="multiplayer" name="multiplayer">Multiplayer</button>
       <button data-action="back">Back</button>
     </div>
+    <!-- Select playlist mode -->
     <div id="playlist-mode-container" hidden>
       <button data-action="classic-mode" id="classic" name="classic">Classic</button>
       <button data-action="genere-mode" id="genere" name="genere">Genere</button>
@@ -32,6 +33,6 @@
       <button data-action="back">Back</button>
     </div>
     <script src="{{ url_for('static', filename='js/mainMenu.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/general.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

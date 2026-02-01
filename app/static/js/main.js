@@ -8,9 +8,11 @@ function hideDiv(container) {
 
 function playerSelected(button) {
     console.log(button.id);
+    return button.id
 }
 
 function workInProgress() {
-    alert("bruh");
+    alert("Coming Soon!");
+    console.log("bruh")
 }
 

@@ -4,7 +4,7 @@ import psycopg2
 from dotenv import load_dotenv
 
 
-# Connection Query
+# CONNECTION QUERY
 def db_get_connection():
     print("Establishing DB connection...")
     load_dotenv()
@@ -17,7 +17,7 @@ def db_get_connection():
     )
     return conn.cursor()
     
-# Playlists Queries
+# PLAYLISTS QUERIES
 def db_get_playlists():
     print("Fetching all playlists from DB...")
     cur = db_get_connection()
@@ -49,7 +49,7 @@ def db_get_playlist_details(column_name):
     cur.close()
     return result
 
-# Players Queries
+# PLAYERS QUERIES
 def db_add_user(username, lobby_code):
     print("Adding user to DB...")
     print(f"Username: {username}, Lobby Code: {lobby_code}")
@@ -61,29 +61,30 @@ def db_add_user(username, lobby_code):
     cur.close()
     cur.connection.close() 
 
-# Lobby Queries
-def db_create_lobby(lobbyCode, gameMode):
+# LOBBIES QUERIES
+def db_get_lobby(lobbyCode):
+    cur = db_get_connection()
+    cur.execute("""
+    select lobby_code from lobbies where lobby_code=%s;
+    """, (lobbyCode,))
+    results = cur.fetchall()
+    cur.close()
+    cur.connection.close()
+    return results
+
+def db_create_lobby(lobbyCode, playerMode, playlistMode):
+    playerMode = 1 if playerMode == "singleplayer" else 8
     print("Adding lobby code to db...")
-    print(f"Lobby Code: {lobbyCode}, Game Mode: {gameMode}")
+    print(f"(IN DB) Creating lobby: {lobbyCode}, Playlist Mode: {playlistMode}, Player Mode {playerMode}")
     # cur = db_get_connection()
     # cur.execute("""
-    # INSERT INTO lobbies (lobby_code, game_mode) VALUES (%s, %s);
-    # """, (lobbyCode, gameMode))
+    # INSERT INTO lobbies (lobby_code, player_mode, playlist_mode) VALUES (%s, %s, %s);
+    # """, (lobbyCode, playerMode, playlistMode))
     # cur.connection.commit()
     # cur.close()
     # cur.connection.close() 
 
-# def db_add_lobby_code_and_playlist_id(lobbyCode, playlistId):
-#     print("Adding lobby code to db...")
-#     cur = db_get_connection()
-#     cur.execute("""
-#     INSERT INTO players (username, lobby_code) VALUES (%s, %s);
-#     """, (lobbyCode, playlistId))
-#     cur.connection.commit()
-#     cur.close()
-#     cur.connection.close() 
-
-# Players and Avatars Update
+# PLAYERS AND AVATARS UPDATE
 def db_add_user_avatar(username, avatar_id):
     cur = db_get_connection()
     print("Updating avatar taken status in DB...")
@@ -102,7 +103,7 @@ def db_add_user_avatar(username, avatar_id):
     cur.close()
     cur.connection.close()
 
-# Avatars Queries
+# AVATAR QUERIES
 # TODO: Ignore taken for now
 def db_get_avatars():
     print("Fetching all avatars from DB...")

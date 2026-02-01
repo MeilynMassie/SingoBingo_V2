@@ -10,20 +10,6 @@ from app.services.db import (
 
 login_bp = Blueprint('login', __name__)
 
-def generateLobbyCode():
-    faker = Faker()
-    lobby_code = faker.bothify(text='?????', letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    print(f'Generated Lobby Code: {lobby_code}')
-    return lobby_code
-
-@login_bp.route('/lobbies', methods=['POST'])
-def create_lobby():
-    lobbyCode = generateLobbyCode()
-    db_create_lobby(lobbyCode=lobbyCode, gameMode='Classic')
-    return jsonify({
-        "lobby_code": lobbyCode
-    })
-
 # Adds user in db
 @login_bp.route('/db/createUser', methods=['POST'])
 def create_user():

@@ -1,8 +1,8 @@
-.PHONY: setup test debug eb
+.PHONY: setup freeze test debug kill eb format
 PYTHON := .venv/bin/python
 FLASK  := .venv/bin/flask
 PIP := .venv/bin/pip
-APP_URL := http://127.0.0.1:5000/startGame
+APP_URL := http://127.0.0.1:5000/mainMenu
 
 # Initial setup
 setup:
@@ -36,6 +36,10 @@ debug:
 	@$(PYTHON) -m webbrowser $(APP_URL)
 	@wait
 
+# So I don't have to use the GUI anymore to debug
+kill:
+	@lsof -ti:5000 | xargs kill || true
+	@echo "Killed debugger"
 
 # TODO: AWS EB
 eb:

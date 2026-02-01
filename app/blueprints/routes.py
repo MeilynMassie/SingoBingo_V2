@@ -1,9 +1,8 @@
 # OVERVIEW: Contains routes that only render templates for now 
 from flask import Blueprint, render_template
-from app.blueprints.login import generateLobbyCode
+from app.services.db import db_get_lobby
 
 main = Blueprint("main", __name__)
-lobbyCode = generateLobbyCode()
 
 # Testing page
 @main.route('/testPage')
@@ -14,11 +13,16 @@ def test_page():
 # Main Menu
 @main.route('/mainMenu')
 def main_menu():
-    return render_template('mainMenu.html', lobbyCode=lobbyCode)
+    return render_template('mainMenu.html')
 
-@main.route('/lobby')
-def lobby():
-    return render_template('lobby.html')
+@main.route('/lobby/<lobbyCode>')
+def lobby(lobbyCode):
+    lobbyExists = db_get_lobby(lobbyCode)
+    print(lobbyExists)
+    if not lobbyExists:
+        return "Lobby not found", 404
+    # return render_template('bingoCard.html') 
+    return render_template('lobby.html',lobbyCode=lobbyCode)
 
 # Starts playing music
 @main.route("/startGame")
@@ -31,7 +35,7 @@ def start_game():
 @main.route('/')
 @main.route('/login')
 def login():
-    return render_template('login.html', lobbyCode=lobbyCode)
+    return render_template('login.html')
 
 # Render bingo card
 @main.route('/bingoCard')   

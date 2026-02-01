@@ -1,21 +1,22 @@
-<!-- OVERVIEW: Allows user -->
+<!-- OVERVIEW: Allows user to join lobby, create username, and select avatar -->
 <!DOCTYPE html>
 <html>
     <head>
         <title>Singo Bingo Login</title>
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-        <link rel="stylesheet" href="static/css/login.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     </head>
     <body>
         <input type="hidden" id="lobby-code" value="{{ lobbyCode }}">
-        <!-- Login form to add user to db and verify lobby code -->
+        
         <div id="join-lobby-container">
             <h1>Join Lobby</h1>
             {% if error %}
                 <p style="color:red">{{ error }}</p>
             {% endif %}
             <!-- TODO: Delete lobbycode later (provided by computer) -->
-            <h1>LOBBY CODE: {{ lobbyCode }} </h1>
+            <!-- <h1>LOBBY CODE: {{ lobbyCode }} </h1> -->
+             <!-- Login form to add user to db and verify lobby code -->
             <div id="login-form-container">
                 <form id="login-form" method="POST">
                     <input 
