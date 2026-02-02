@@ -57,7 +57,7 @@ def spotify_get_selected_playlist():
     db_add_all_songs(playlist_details, playlist_id)
     return jsonify({"ok": True})  
     
-# Returns a randomized playlist of 25 songs to front end
+# Returns a randomized playlist of 24 songs to front end
 @spotify_bp.route('/spotify/playlists/songs', methods=['GET'])
 def spotify_get_playlist_songs():
     lobby_code = request.args.get("lobby_code")
@@ -68,13 +68,13 @@ def spotify_get_playlist_songs():
     random.shuffle(songs)
     if user_type == 'player':
         songs = [song[0] for song in songs]
-        songs = songs[:25]
+        songs = songs[:24]
         print(songs)
         return jsonify({
             "ok": True,
             "songs": songs
         })
-    else: # This will be for when the computer playing the music request the order the songs will play in 
+    else: # TODO: This will be for when the computer playing the music request the order the songs will play in 
         return jsonify({
             "ok": True,
             "songs": songs
@@ -95,4 +95,4 @@ def play_song():
     sp.start_playback(
         uris=["spotify:track:0SdkWJzc4T1ck7tD6lV2Kw"]
     )
-    return render_template('start_game.html', song=songName)
+    return render_template('startGame.html', song=songName)

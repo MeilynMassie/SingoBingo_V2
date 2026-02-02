@@ -21,11 +21,20 @@ fetch(`/spotify/playlists/songs?lobby_code=${lobbyCode}&user_type=player`)
         });
         // Add songs to bingo grid
         const card = document.getElementById('bingo-grid');
-        songs.songs.forEach(song => {
+        songs.songs.forEach((song, i) => {
+            // Add free space
+            if (i === 12) {
+                const tile = document.createElement('div');
+                tile.id = 'free-space';
+                tile.textContent = 'FREE SPACE';
+                tile.className = 'song-tile';
+                tile.addEventListener('click', songTileClicked);
+                card.appendChild(tile);
+            }
             const tile = document.createElement('div');
-            tile.className = 'song-tile';
             tile.id = song;
             tile.textContent = song;
+            tile.className = 'song-tile';
             tile.addEventListener('click', songTileClicked);
             card.appendChild(tile);
         });
