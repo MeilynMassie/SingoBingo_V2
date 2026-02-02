@@ -68,8 +68,6 @@ function addAvatarToUser(avatarId) {
         .then(data => {
             if (data.ok) {
                 console.log("Avatar saved!");
-                console.log("Redirecting to /bingoCard");
-                window.location.href = "/bingoCard";
             } else {
                 console.error("Error:", data.error);
             }
@@ -78,6 +76,7 @@ function addAvatarToUser(avatarId) {
 
 
 function showAvatarSelection() {
+    const lobbyCodeInput = document.getElementById('lobby-code-input').value.trim().toUpperCase();
     const avatarDiv = document.getElementById('avatar-selection-container');
     hideDiv('login-form-container');
     showDiv('avatar-selection-container');
@@ -108,8 +107,8 @@ function showAvatarSelection() {
                         .then(data => {
                             if (data.ok) {
                                 console.log("Avatar saved!");
-                                console.log("Redirecting to /bingoCard");
-                                window.location.href = "/bingoCard";
+                                console.log(`/bingoCard/${lobbyCodeInput}`);
+                                window.location.href = `/bingoCard/${lobbyCodeInput}`;
                             } else {
                                 console.error("Error:", data.error);
                             }

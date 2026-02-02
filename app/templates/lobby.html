@@ -22,6 +22,13 @@
 
     <!-- TODO: This div is to show the ring of users taken with their username listed below their avatar -->
     <div id="signed-in-players" hidden></div>
+
+    <!-- TODO: Redirect to start game -->
+     <div id="readyToStartGameContainer">
+      <button id="readyToStartGame">Everyone's In</button>
+     </div>
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lobby.js') }}"></script>
   </body>
 </html>

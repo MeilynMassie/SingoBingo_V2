@@ -4,10 +4,11 @@ function songTileClicked(event) {
 }
 
 // Fetch Playlist JSON and build bingo card
-fetch('/spotify/playlists/selectedPlaylist')
+const lobbyCode = document.getElementById('lobby-code').value;
+fetch(`/spotify/playlists/songs?lobby_code=${lobbyCode}&user_type=player`)
     .then(response => response.json())
-    .then(playlist => {
-        console.log(playlist);
+    .then(songs => {
+        console.log(songs.songs);
         // Create a 6x5 bingo card
         // Create header
         const headerRow = document.getElementById('bingo-header-row');
@@ -20,7 +21,7 @@ fetch('/spotify/playlists/selectedPlaylist')
         });
         // Add songs to bingo grid
         const card = document.getElementById('bingo-grid');
-        playlist.forEach(song => {
+        songs.songs.forEach(song => {
             const tile = document.createElement('div');
             tile.className = 'song-tile';
             tile.id = song;

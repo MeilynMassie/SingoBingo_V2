@@ -27,3 +27,12 @@ MAKEFILE NOTES
 FOR TESTING LOCALLY WIHTOUT RUNNING FLASK 
 - Run > make test
 - Use keyword "assert" to return more detailed errors or use pytest
+
+PLAYER STATUS 
+- active
+- inactive
+
+LOBBY STATUS
+- waiting
+- active
+- inactive

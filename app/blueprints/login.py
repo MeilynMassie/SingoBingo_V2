@@ -42,7 +42,7 @@ def get_avatar_images():
     avatar_list = [{'id': avatar[0], 'filePath': 'static/imgs/avatars/'+avatar[1]} for avatar in avatars]
     return jsonify(avatar_list)
 
-# TODO FIRST: Retrieve lobby code so that it can verify in js that the lobby code that the user submitted exists
+# Retrieves all active lobby codes
 @login_bp.route('/db/getLobbyCode')
 def get_lobby_code():
     lobbies = db_get_all_active_lobbies()

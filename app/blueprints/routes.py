@@ -25,9 +25,13 @@ def lobby(lobbyCode):
     return render_template('lobby.html',lobbyCode=lobbyCode)
 
 # Starts playing music
-@main.route("/startGame")
-def start_game():
-    return render_template("startGame.html")
+@main.route("/startGame/<lobbyCode>")
+def start_game(lobbyCode):
+    lobbyExists = db_get_lobby(lobbyCode)
+    print(lobbyExists)
+    if not lobbyExists:
+        return "Lobby not found", 404
+    return render_template("startGame.html",lobbyCode=lobbyCode)
 
 
 ## PLAYER ROUTES (MOBILE) ##
@@ -38,8 +42,12 @@ def login():
     return render_template('login.html')
 
 # Render bingo card
-@main.route('/bingoCard')   
-def generate_bingo_card():
+@main.route('/bingoCard/<lobbyCode>')   
+def generate_bingo_card(lobbyCode):
+    lobbyExists = db_get_lobby(lobbyCode)
+    print(lobbyExists)
+    if not lobbyExists:
+        return "Lobby not found", 404
     print("Rendering bingo card...")
-    return render_template('bingoCard.html')
+    return render_template('bingoCard.html', lobbyCode=lobbyCode)
 
