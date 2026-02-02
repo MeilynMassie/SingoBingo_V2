@@ -1,0 +1,34 @@
+<!-- OVERVIEW: Displays lobbycode, states instructions, waiting room for people already signed in  -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lobby.css') }}">
+    <title>Singo Bingo</title>
+  </head>
+  <body>
+    <input type="hidden" id="lobby-code" value="{{ lobbyCode }}">
+    <!-- Displays lobby code -->
+    <div id="lobby-code-container">
+      {% if error %}
+        <p style="color:red">{{ error }}</p>
+      {% endif %}
+      <h1>LOBBY CODE: {{lobbyCode}} </h1>
+    </div>
+
+    <!-- TODO: Will display/read instructions for game while players login -->
+    <div id="instructions" hidden></div>
+
+    <!-- TODO: This div is to show the ring of users taken with their username listed below their avatar -->
+    <div id="signed-in-players" hidden></div>
+
+    <!-- TODO: Redirect to start game -->
+     <div id="readyToStartGameContainer">
+      <button id="readyToStartGame">Everyone's In</button>
+     </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+  </body>
+</html>

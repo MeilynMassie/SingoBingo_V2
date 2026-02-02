@@ -8,15 +8,6 @@
   </head>
   <body>
     <h1>TEST PAGE</h1>
-
-    {% if playlists %}
-      <ul>
-        {% for playlist in playlists %}
-          <li>{{ playlist }}</li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No playlists found.</p>
-    {% endif %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

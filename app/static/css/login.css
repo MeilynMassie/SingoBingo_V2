@@ -1,4 +1,4 @@
-.avatarImage {
+.avatar-image {
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -8,11 +8,11 @@
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
-.avatarImage:hover {
+.avatar-image:hover {
   transform: scale(1.07);
   border-color: #333;
 }
 
-.avatarselected {
+.avatar-selected {
   border-color: #007BFF;
 }

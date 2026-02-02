@@ -1,48 +1,40 @@
-<!-- OVERVIEW: Allows user -->
+<!-- OVERVIEW: Allows user to join lobby, create username, and select avatar -->
 <!DOCTYPE html>
 <html>
     <head>
         <title>Singo Bingo Login</title>
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-        <link rel="stylesheet" href="static/css/login.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     </head>
     <body>
-        <input type="hidden" id="lobby_code" value="{{ lobby_code }}">
         <!-- Login form to add user to db and verify lobby code -->
-        <div id="joinLobbyContainer">
-            <h1>Join Lobby</h1>
-            {% if error %}
-                <p style="color:red">{{ error }}</p>
-            {% endif %}
-            <!-- TODO: Delete lobbycode later (provided by computer) -->
-            <h1>LOBBY CODE: {{lobby_code}} </h1>
-            <div id="loginFormContainer">
-                <form id="loginForm" method="POST">
-                    <input 
-                        name="username" 
-                        id="username" 
-                        placeholder="Username..." 
-                        maxlength="50"
-                        />
-                    <br/>
-                    <input 
-                        name="lobby_code_input" 
-                        id="lobby_code_input" 
-                        placeholder="Lobby Code..." 
-                        maxlength="5"
-                        />
-                    <br/>
-                    <button type="submit" id="submit_login">Join Lobby</button>
-                </form>
-            </div>
+        <div id="login-form-container">
+            <form id="login-form" method="POST">
+                <input 
+                    name="username" 
+                    id="username" 
+                    placeholder="Username..." 
+                    maxlength="50"
+                    required
+                    />
+                <br/>
+                <input 
+                    name="lobby-code-input" 
+                    id="lobby-code-input" 
+                    placeholder="Lobby Code..." 
+                    maxlength="5"
+                    required
+                    />
+                <br/>
+                <button type="submit" id="submit-login">Join Lobby</button>
+            </form>
         </div>
         <!-- Displays avatars not taken -->
-        <div id="avatarSelectionContainer" hidden>
+        <div id="avatar-selection-container" hidden>
             <h1>Select Your Avatar</h1>
             <h3>Choose Wisely</h3>
-            <div id="avatarSelection"></div>
         </div>
-        
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <script src="{{ url_for('static', filename='js/login.js') }}"></script>
     </body>
 </html>

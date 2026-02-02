@@ -4,11 +4,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/bingoCard.css">
-    <link rel="stylesheet" href="static/css/floatingNotes.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bingoCard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/floatingNotes.css') }}">
     <title>Bingo Card</title>
   </head>
   <body>
+    <input type="hidden" id="lobby-code" value="{{ lobbyCode }}">
+    <input type="hidden" id="playlist-id" value="{{ playlistId }}">
     <h1>Bingo Card</h1>
     <!-- Creates the floating notes in the background  -->
     <div id="floating-notes-container"></div>
@@ -18,7 +20,7 @@
       <div id="bingo-header-row"></div>
       <div id="bingo-grid"></div>
     </div>
-    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bingoCard.js') }}"></script>
     <script src="{{ url_for('static', filename='js/floatingNotes.js') }}"></script>
 
