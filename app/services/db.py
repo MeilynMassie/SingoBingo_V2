@@ -50,7 +50,7 @@ def db_get_playlist_details(column_name):
     cur.close()
     return result
 
-# TODO: Join lobby and songs playlist 
+# Join lobby and songs playlist 
 def db_get_songs_for_player(lobby_code):
     print("Getting songs list for player...")
     cur = db_get_connection();

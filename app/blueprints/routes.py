@@ -33,6 +33,15 @@ def start_game(lobbyCode):
         return "Lobby not found", 404
     return render_template("startGame.html",lobbyCode=lobbyCode)
 
+# Game Over Bro
+@main.route("/gameOver/<lobbyCode>")
+def game_over(lobbyCode):
+    lobbyExists = db_get_lobby(lobbyCode)
+    print(lobbyExists)
+    if not lobbyExists:
+        return "Lobby not found", 404
+    return render_template("gameOver.html",lobbyCode=lobbyCode)
+
 
 ## PLAYER ROUTES (MOBILE) ##
 # Starting point for players on phones

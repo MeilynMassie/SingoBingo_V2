@@ -20,6 +20,11 @@ from app.blueprints.spotifyOAuth import get_spotify_client
 
 spotify_bp = Blueprint('spotify', __name__)
 
+GAME_STATE = {
+    "current_song": None,
+    "next_song": None,
+}
+
 
 # Fetch playlists from Spotify and add songs to DB
 # Sends 4 playlists to front end for user to select playlist
@@ -57,8 +62,9 @@ def spotify_get_selected_playlist():
     db_add_all_songs(playlist_details, playlist_id)
     return jsonify({"ok": True})  
     
+
 # Returns a randomized playlist of 24 songs to front end
-@spotify_bp.route('/spotify/playlists/songs', methods=['GET'])
+@spotify_bp.route('/spotify/playlists/getSongs', methods=['GET'])
 def spotify_get_playlist_songs():
     lobby_code = request.args.get("lobby_code")
     user_type = request.args.get("user_type")
@@ -74,25 +80,39 @@ def spotify_get_playlist_songs():
             "ok": True,
             "songs": songs
         })
-    else: # TODO: This will be for when the computer playing the music request the order the songs will play in 
+    else: # This will be for when the computer playing the music request the order the songs will play in 
         return jsonify({
             "ok": True,
             "songs": songs
         })
     
 
-# TODO NEXT: Play song from playlist (NOT HARDCOODED)
 # TODO: Start playing from the most popular parts of the song
-@spotify_bp.route('/spotify/playsong')
+@spotify_bp.route('/spotify/playlists/playsong', methods=['GET'])
 def play_song():
-    songName = "Takedown - Instrumental"
+    song_uri = request.args.get("song_uri")
+    token = session.get("spotify_token")
+    if not song_uri:
+        return jsonify ({"ok": False, "error": "Missing song_uri"})
+    if not token:
+        return redirect(url_for('spotifyOAuth.spotify_login'))
+    sp = get_spotify_client(token)
+    if not sp:
+        return redirect(url_for('spotifyOAuth.spotify_login'))
+    sp.start_playback(uris=[song_uri])
+    return jsonify({"ok": True})
+
+@spotify_bp.route('/spotify/playlists/stopsong')
+def stop_song():
     token = session.get("spotify_token")
     if not token:
         return redirect(url_for('spotifyOAuth.spotify_login'))
     sp = get_spotify_client(token)
     if not sp:
         return redirect(url_for('spotifyOAuth.spotify_login'))
-    sp.start_playback(
-        uris=["spotify:track:0SdkWJzc4T1ck7tD6lV2Kw"]
-    )
-    return render_template('startGame.html', song=songName)
+    sp.pause_playback()
+    return jsonify({"ok": True})
+
+@spotify_bp.route("/spotify/playlist/songtracker")
+def game_state_endpoint():
+    return jsonify(GAME_STATE)

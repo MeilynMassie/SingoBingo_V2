@@ -5,7 +5,7 @@ function songTileClicked(event) {
 
 // Fetch Playlist JSON and build bingo card
 const lobbyCode = document.getElementById('lobby-code').value;
-fetch(`/spotify/playlists/songs?lobby_code=${lobbyCode}&user_type=player`)
+fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`)
     .then(response => response.json())
     .then(songs => {
         console.log(songs.songs);
