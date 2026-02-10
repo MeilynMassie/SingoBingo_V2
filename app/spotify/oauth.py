@@ -27,20 +27,21 @@ def spotify_callback():
     code = request.args.get("code")
     token_info = spotify_oauth.get_access_token(code)
     session["spotify_token"] = token_info
-    return redirect("/spotify/playlists/playsong")
+    return redirect("/")
+
 
 class SpotifyNotAuthenticated(Exception):
     pass
 
 # Step 4: Return token 
-def get_spotify_client(token_info: dict) -> Spotify:
+def get_spotify_client(token_info):
     if not token_info:
-        raise SpotifyNotAuthenticated()
-    
-    # Refresh if expired
+        return None
+
     if spotify_oauth.is_token_expired(token_info):
         token_info = spotify_oauth.refresh_access_token(
             token_info["refresh_token"]
         )
+        session["spotify_token"] = token_info
 
     return Spotify(auth=token_info["access_token"])
