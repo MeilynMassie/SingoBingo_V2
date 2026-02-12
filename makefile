@@ -2,7 +2,7 @@
 PYTHON := .venv/bin/python
 FLASK  := .venv/bin/flask
 PIP := .venv/bin/pip
-APP_URL := http://127.0.0.1:5000/bingoCard/XKZCJ
+APP_URL := http://127.0.0.1:5000/startGame/XKZCJ
 # Initial setup
 setup:
 	@echo "STARTING: Creating .venv"

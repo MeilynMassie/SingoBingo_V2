@@ -1,51 +1,95 @@
 lobbyCode = document.getElementById('lobby-code').value;
+someoneHasBingo = false;
 
-// Fetch Playlist JSON and build bingo card
-fetch('/spotify/playlists/classicMode')
-    .then(response => response.json())
-    .then(playlists => {
-        // Display lists of playlist options for user to select
-        const playlistSelectionContainer = document.getElementById('playlist-selection-container');
+// Starting point for startGame
+loadClassicModePlaylists();
+
+// Displays 4 playlists for the user to choose from (TODO: Will be a wheel later)
+async function loadClassicModePlaylists() {
+    try {
+        const res = await fetch('/spotify/getplaylists?mode=classic');
+        const playlists = await res.json();
+        const container = document.getElementById('playlist-selection-container');
+
         playlists.forEach(playlist => {
             const playlistCell = document.createElement('div');
-            playlistCell.dataset.id = playlist.id;
-            playlistCell.dataset.playlistId = playlist.playlist_id;
-            playlistCell.dataset.name = playlist.playlist_name;
             playlistCell.textContent = playlist.playlist_name;
-            playlistCell.addEventListener('click', () => {
-                fetch("/spotify/playlists/selectedPlaylist", {
+            playlistCell.addEventListener('click', async () => {
+                const res = await fetch("/spotify/playlists/selectedPlaylist", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         playlist_id: playlist.id,
-                        playlist_uri: playlist.playlist_id,
+                        playlist_uri: playlist.playlist_uri,
                         playlist_name: playlist.playlist_name,
                         lobby_code: lobbyCode
                     })
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.ok) {
-                            console.log("Playlist saved to db!");
-                            displaySelectedPlaylist(playlist.playlist_name);
-                        } else {
-                            console.error("Error:", data.error);
-                        }
-                    });
+                });
+                const data = await res.json();
+                if (data.auth_required) {
+                    window.location.href = "/spotify/login";
+                    return;
+                }
+                else if (data.ok) {
+                    hideDiv('playlist-selection-container');
+                    showDiv('playlist-visual-container');
+                    const playlistVisualContainer = document.getElementById('playlist-visual-container');
+                    const playlistTitle = document.createElement('h2');
+                    playlistTitle.textContent = `Playlist Chosen: ${playlist.playlist_name}`;
+                    playlistVisualContainer.appendChild(playlistTitle);
+                    displaySongCurrentlyPlaying();
+                }
             });
-            playlistSelectionContainer.appendChild(playlistCell);
+            container.appendChild(playlistCell);
         });
-    })
-    .catch(error => {
-        console.error('Error fetching JSON:', error);
-    });
+    } catch (err) {
+        console.error(err);
+    }
+}
 
+// Delay timer 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-function displaySelectedPlaylist(playlistName) {
-    hideDiv('playlist-selection-container');
-    showDiv('playlist-visual-container');
-    const playlistVisualContainer = document.getElementById('playlist-visual-container');
-    const playlistTitle = document.createElement('h2');
-    playlistTitle.textContent = playlistName;
-    playlistVisualContainer.appendChild(playlistTitle);
+// Shows which song is playing (mostly used to debug)
+// TODO: Add a reolad for when host choses playlist or not even run it till then
+async function displaySongCurrentlyPlaying() {
+    console.log("In displaySongCurrentlyPlaying")
+    try {
+        // Step 1: Retrieve playlist
+        const response = await fetch(
+            `/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=spotifyPlayer`
+        );
+        const data = await response.json();
+        const songDetails = data.songs;
+        console.log(songDetails);
+        showDiv('song-visual-container');
+        const songVisualContainer = document.getElementById('song-visual-container');
+
+        // Plays songs until someone gets bingo
+        for (const song of songDetails) {
+            const songTitle = song.song_name;
+            const songUri = song.song_uri;
+            // Step 2: Tell backend to play song
+            await fetch(`/spotify/playlists/playsong?song_uri=${encodeURIComponent(songUri)}`);
+            // Step 3: Display currently playing song (debugging purposes)
+            songVisualContainer.innerHTML = ""; // clear previous song
+            const songEl = document.createElement('p');
+            songEl.textContent = `Song Currently Playing: ${songTitle}`;
+            songVisualContainer.appendChild(songEl);
+            // Step 4: Play 20 seconds and silence for 5 
+            await delay(15000); // Play song for 15
+            await fetch('/spotify/playlists/stopsong');
+            await delay(5000); // Stop song for 5
+            // Step 5: Check for bingo
+            if (someoneHasBingo) {
+                console.log(`/gameOver/${lobbyCode}`)
+                window.location.href = `/gameOver/${lobbyCode}`;
+                return;
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching songs:', error);
+    }
 }

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 spotifyOAuth_bp = Blueprint('spotifyOAuth', __name__)
 load_dotenv()
 
-# Step 1: User logs in and is redirected to Spotify
+# Step 1: Set up Spotify configurations
 spotify_oauth = SpotifyOAuth(
     client_id=os.getenv("SPOTIFY_CLIENT_ID"),
     client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
@@ -25,26 +25,23 @@ def spotify_login():
 @spotifyOAuth_bp.route("/callback")
 def spotify_callback():
     code = request.args.get("code")
-
     token_info = spotify_oauth.get_access_token(code)
-
-    # ✅ Store token per user
     session["spotify_token"] = token_info
+    return redirect("/")
 
-    return redirect("/spotify/playsong")
 
 class SpotifyNotAuthenticated(Exception):
     pass
 
 # Step 4: Return token 
-def get_spotify_client(token_info: dict) -> Spotify:
+def get_spotify_client(token_info):
     if not token_info:
-        raise SpotifyNotAuthenticated()
+        return None
 
-    # 🔄 Refresh if expired
     if spotify_oauth.is_token_expired(token_info):
         token_info = spotify_oauth.refresh_access_token(
             token_info["refresh_token"]
         )
+        session["spotify_token"] = token_info
 
     return Spotify(auth=token_info["access_token"])

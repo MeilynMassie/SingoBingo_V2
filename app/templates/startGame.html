@@ -11,17 +11,13 @@
     <input type="hidden" id="lobby-code" value="{{ lobbyCode }}">
     <!-- Displays playlist options for user -->
     <div id="playlist-selection-container">
-      <h3>Pick One (not really I already picked): </h3>
+      <h3>Pick One: </h3>
     </div>
     <!-- Shows what playlist was chosen -->
-    <div id="playlist-visual-container" hidden>
-        <h3>Currently playing: </h3>
-    </div>
+    <div id="playlist-visual-container" hidden></div>
     <!-- TODO: Add whatever feedback will be needed to visually show that music is playing -->
     <!-- TODO: Add wavelengths to the beat of the song (or pretend) -->
-    <div id="song-visual-container" hidden>
-        <h3>Currently playing: </h3>
-    </div>
+    <div id="song-visual-container" hidden></div>
     <!-- TODO: Keep track of how long the song has been playing and the moment of silence (15/5) -->
     <div id="timer" hidden></div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

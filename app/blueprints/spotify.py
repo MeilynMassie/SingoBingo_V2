@@ -1,44 +1,41 @@
 #OVERVIEW: All spotiPy related functions
 import random
-# import psycopg2
-from flask import (Blueprint, 
+from flask import (
+    Blueprint, 
     jsonify, 
-    session, 
-    render_template,
     request,
-    redirect,
-    url_for
-)
-from app.services.db import (
-    db_get_playlists, 
-    db_add_playlist_to_lobby,
+    g
+) 
+from app.services.db_playlist_service import (
+    db_get_playlists,
     db_add_all_songs,
-    db_get_songs_for_player
-)  
-from app.blueprints.spotifyOAuth import get_spotify_client
+    db_get_songs_for_bingo_card
+)
+from app.services.db_lobby_service import (
+    db_add_playlist_to_lobby
+)
+from app.services.game_service import GameState
+from app.spotify.service import SpotifyService
+from app.spotify.decorator import require_spotify
 
 
 spotify_bp = Blueprint('spotify', __name__)
 
-
 # Fetch playlists from Spotify and add songs to DB
 # Sends 4 playlists to front end for user to select playlist
-@spotify_bp.route('/spotify/playlists/classicMode')
-def spotify_get_four_playlists():
-    # Step 1: DB - Get 4 playlists to choose from (TODO:create wheel to display later)
-    list_of_playlists = db_get_playlists()
-    # Step 2 Shuffle playlists and select 4 randomly
-    random.shuffle(list_of_playlists)
-    list_of_playlists = list_of_playlists[:4]
-    list_of_playlists = [{'id': playlist[0], 'playlist_id': playlist[1], 'playlist_name': playlist[2]} for playlist in list_of_playlists]
+@spotify_bp.route('/spotify/getplaylists')
+def spotify_get_playlists():
+    # TODO: Create wheel to display later
+    mode = request.args.get("mode")
+    list_of_playlists = db_get_playlists(playlist_mode=mode)
     print(f"Playlists from DB: {list_of_playlists}")
     return jsonify(list_of_playlists)
 
 
 # Get selected playlist from user, save to db, return list of songs
 @spotify_bp.route('/spotify/playlists/selectedPlaylist', methods=['POST'])
+@require_spotify
 def spotify_get_selected_playlist():
-    # Step 1: Read player selected playlist 
     data = request.get_json()
     playlist_id = data.get("playlist_id")
     playlist_uri = data.get("playlist_uri")
@@ -47,52 +44,79 @@ def spotify_get_selected_playlist():
     print(f"playlist_id: {playlist_id}, playlist_uri: {playlist_uri}, song_name: {playlist_name}, lobby_code: {lobby_code}")
     if not playlist_id or not playlist_uri or not playlist_name or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
-    # Step 2: Add playlist to lobby table
-    db_add_playlist_to_lobby(lobby_code, playlist_id)
-    # Step 3: Add songs from playlist to db
-    sp = get_spotify_client(session.get("spotify_token"))
-    playlist = sp.playlist(playlist_id=playlist_uri, fields="tracks.items(track(name,uri))")
-    playlist_details = [(item["track"]["uri"],item["track"]["name"],playlist_id) for item in playlist["tracks"]["items"] if item["track"] is not None]
-    print(f"Playlist Length: {len(playlist_details)}")
+    db_add_playlist_to_lobby(lobby_code=lobby_code, playlist_id=playlist_id)
+    spotify = SpotifyService(g.sp)
+    playlist_details = spotify.getPlaylistDetails(playlist_id=playlist_id, playlist_uri=playlist_uri)
+    print(playlist_details)
     db_add_all_songs(playlist_details, playlist_id)
     return jsonify({"ok": True})  
     
-# Returns a randomized playlist of 25 songs to front end
-@spotify_bp.route('/spotify/playlists/songs', methods=['GET'])
+
+# Returns a randomized playlist of 24 songs to front end
+# TODO: Start here tomorrow 
+@spotify_bp.route('/spotify/playlists/getSongs', methods=['GET'])
 def spotify_get_playlist_songs():
     lobby_code = request.args.get("lobby_code")
     user_type = request.args.get("user_type")
     if not lobby_code:
         return jsonify({"ok": False, "error": "Missing lobby_code"}), 400
-    songs = db_get_songs_for_player(lobby_code)
+    songs = db_get_songs_for_bingo_card(lobby_code)
+    songs = [{"song_name": song.song_name, "song_uri": song.song_uri} for song in songs]
     random.shuffle(songs)
+    print("After shuffle")
+    # TODO: Add game state stuff here later
     if user_type == 'player':
-        songs = [song[0] for song in songs]
-        songs = songs[:25]
-        print(songs)
+        print(f"Player songs: {songs}")
+        songs = [song["song_name"] for song in songs]
+        songs = songs[:24]
+        print(f"\n\nPlayer songs after slice: {songs}")
         return jsonify({
             "ok": True,
             "songs": songs
         })
-    else: # This will be for when the computer playing the music request the order the songs will play in 
-        return jsonify({
-            "ok": True,
-            "songs": songs
-        })
-    
+    return jsonify({
+        "ok": True,
+        "songs": songs
+    })  
 
-# TODO NEXT: Play song from playlist (NOT HARDCOODED)
 # TODO: Start playing from the most popular parts of the song
-@spotify_bp.route('/spotify/playsong')
+@spotify_bp.route('/spotify/playlists/playsong', methods=['GET'])
+@require_spotify
 def play_song():
-    songName = "Takedown - Instrumental"
-    token = session.get("spotify_token")
-    if not token:
-        return redirect(url_for('spotifyOAuth.spotify_login'))
-    sp = get_spotify_client(token)
-    if not sp:
-        return redirect(url_for('spotifyOAuth.spotify_login'))
-    sp.start_playback(
-        uris=["spotify:track:0SdkWJzc4T1ck7tD6lV2Kw"]
-    )
-    return render_template('start_game.html', song=songName)
+    song_uri = request.args.get("song_uri")
+    spotify = SpotifyService(g.sp)
+    spotify.playSong(song_uri)
+    # spotify.playSong('spotify:track:5p9UNx7gLRdRoaEHd8TAnz')
+    return jsonify({"ok": True})
+
+@spotify_bp.route('/spotify/playlists/stopsong')
+@require_spotify
+def stop_song():
+    spotify = SpotifyService(g.sp)
+    
+    spotify.stopSong()
+    return jsonify({"ok": True})
+
+
+#  USE THIS ROUTE FOR TESTING 
+@spotify_bp.route('/test/playsong')
+@require_spotify
+def test_play_song():
+    spotify = SpotifyService(g.sp)
+    spotify.playSong('spotify:track:28UMEtwyUUy5u0UWOVHwiI')
+    return jsonify({"ok": True})
+
+@spotify_bp.route('/getGameState')
+def get_game_state():
+    lobby_code = request.args.get("lobby_code")
+    GameState.create_game_state(lobby_code)
+
+    # GameState.set_playlist(lobby_code, ["song1", "song2", "song3"])
+    print(GameState.get_game_state(lobby_code))
+    return jsonify({"ok": True, "data": GameState.get_game_state(lobby_code)})
+
+
+@spotify_bp.route('/test/everything')
+def test_ultima():
+    # TODO: Test all game state stuff here step by step
+    pass
