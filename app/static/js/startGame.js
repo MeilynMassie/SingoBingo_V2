@@ -53,57 +53,43 @@ function delay(ms) {
 }
 
 // Shows which song is playing (mostly used to debug)
+// TODO: Add a reolad for when host choses playlist or not even run it till then
 async function displaySongCurrentlyPlaying() {
+    console.log("In displaySongCurrentlyPlaying")
     try {
-        console.log("In displaySongCurrentlyPlaying")
-        let response = await fetch(`/test/playsong`);
+        // Step 1: Retrieve playlist
+        const response = await fetch(
+            `/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=spotifyPlayer`
+        );
         const data = await response.json();
-        console.log(data)
-        // const gameState = data.data;
-        // console.log(gameState);
-        // response = await fetch(`/test/playsong?lobby_code=${lobbyCode}`)
+        const songDetails = data.songs;
+        console.log(songDetails);
+        showDiv('song-visual-container');
+        const songVisualContainer = document.getElementById('song-visual-container');
+
+        // Plays songs until someone gets bingo
+        for (const song of songDetails) {
+            const songTitle = song.song_name;
+            const songUri = song.song_uri;
+            // Step 2: Tell backend to play song
+            await fetch(`/spotify/playlists/playsong?song_uri=${encodeURIComponent(songUri)}`);
+            // Step 3: Display currently playing song (debugging purposes)
+            songVisualContainer.innerHTML = ""; // clear previous song
+            const songEl = document.createElement('p');
+            songEl.textContent = `Song Currently Playing: ${songTitle}`;
+            songVisualContainer.appendChild(songEl);
+            // Step 4: Play 20 seconds and silence for 5 
+            await delay(15000); // Play song for 15
+            await fetch('/spotify/playlists/stopsong');
+            await delay(5000); // Stop song for 5
+            // Step 5: Check for bingo
+            if (someoneHasBingo) {
+                console.log(`/gameOver/${lobbyCode}`)
+                window.location.href = `/gameOver/${lobbyCode}`;
+                return;
+            }
+        }
     } catch (error) {
         console.error('Error fetching songs:', error);
     }
 }
-
-
-// Shows which song is playing (mostly used to debug)
-// async function displaySongCurrentlyPlaying() {
-//     try {
-//         // Step 1: Retrieve playlist
-//         const response = await fetch(
-//             `/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=spotifyPlayer`
-//         );
-//         const data = await response.json();
-//         const songDetails = data.songs;
-//         console.log(songDetails);
-//         showDiv('song-visual-container');
-//         const songVisualContainer = document.getElementById('song-visual-container');
-
-//         // Plays songs until someone gets bingo
-//         for (const song of songDetails) {
-//             const songTitle = song[0];
-//             const songUri = song[1];
-//             // Step 2: Tell backend to play song
-//             await fetch(`/spotify/playlists/playsong?song_uri=${encodeURIComponent(songUri)}`);
-//             // Step 3: Display currently playing song (debugging purposes)
-//             songVisualContainer.innerHTML = ""; // clear previous song
-//             const songEl = document.createElement('p');
-//             songEl.textContent = `Song Currently Playing: ${songTitle}`;
-//             songVisualContainer.appendChild(songEl);
-//             // Step 4: Play 20 seconds and silence for 5 
-//             await delay(15000); // Play song for 15
-//             await fetch('/spotify/playlists/stopsong');
-//             await delay(5000); // Stop song for 5
-//             // Step 5: Check for bingo
-//             if (someoneHasBingo) {
-//                 console.log(`/gameOver/${lobbyCode}`)
-//                 window.location.href = `/gameOver/${lobbyCode}`;
-//                 return;
-//             }
-//         }
-//     } catch (error) {
-//         console.error('Error fetching songs:', error);
-//     }
-// }

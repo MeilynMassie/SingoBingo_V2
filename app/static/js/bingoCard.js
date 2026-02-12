@@ -1,28 +1,35 @@
+loadBingoCard();
+
 function songTileClicked(event) {
     console.log("Song tile clicked: ", event.target.id);
     event.target.classList.toggle('marked');
 }
 
 // Fetch Playlist JSON and build bingo card
-const lobbyCode = document.getElementById('lobby-code').value;
-fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`)
-    .then(response => response.json())
-    .then(songs => {
+async function loadBingoCard() {
+    try {
+        const lobbyCode = document.getElementById('lobby-code').value;
+        const response = await fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`);
+        const songs = await response.json();
+
         console.log(songs.songs);
-        // Create a 6x5 bingo card
+
         // Create header
         const headerRow = document.getElementById('bingo-header-row');
         const title = ['B', 'I', 'N', 'G', 'O'];
+
         title.forEach(letter => {
             const headerCell = document.createElement('div');
             headerCell.className = 'bingo-letter';
             headerCell.textContent = letter;
             headerRow.appendChild(headerCell);
         });
+
         // Add songs to bingo grid
         const card = document.getElementById('bingo-grid');
+
         songs.songs.forEach((song, i) => {
-            // Add free space
+            // Add free space in center (index 12 of 25)
             if (i === 12) {
                 const tile = document.createElement('div');
                 tile.id = 'free-space';
@@ -31,6 +38,7 @@ fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`)
                 tile.addEventListener('click', songTileClicked);
                 card.appendChild(tile);
             }
+
             const tile = document.createElement('div');
             tile.id = song;
             tile.textContent = song;
@@ -38,7 +46,8 @@ fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`)
             tile.addEventListener('click', songTileClicked);
             card.appendChild(tile);
         });
-    })
-    .catch(error => {
+
+    } catch (error) {
         console.error('Error fetching JSON:', error);
-    });
+    }
+}

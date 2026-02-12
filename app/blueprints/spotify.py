@@ -48,7 +48,6 @@ def spotify_get_selected_playlist():
     spotify = SpotifyService(g.sp)
     playlist_details = spotify.getPlaylistDetails(playlist_id=playlist_id, playlist_uri=playlist_uri)
     print(playlist_details)
-    # TODO: DO THIS NOW
     db_add_all_songs(playlist_details, playlist_id)
     return jsonify({"ok": True})  
     
@@ -62,14 +61,15 @@ def spotify_get_playlist_songs():
     if not lobby_code:
         return jsonify({"ok": False, "error": "Missing lobby_code"}), 400
     songs = db_get_songs_for_bingo_card(lobby_code)
+    songs = [{"song_name": song.song_name, "song_uri": song.song_uri} for song in songs]
     random.shuffle(songs)
-    GameState.get_game(lobby_code).set_playlist(songs)
-    # GameState.set_playlist(lobby_code, songs)
-    print(GameState.get_game_state(lobby_code))
+    print("After shuffle")
+    # TODO: Add game state stuff here later
     if user_type == 'player':
-        songs = [song[0] for song in songs]
+        print(f"Player songs: {songs}")
+        songs = [song["song_name"] for song in songs]
         songs = songs[:24]
-        print(songs)
+        print(f"\n\nPlayer songs after slice: {songs}")
         return jsonify({
             "ok": True,
             "songs": songs

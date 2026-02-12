@@ -7,3 +7,11 @@ class Song(db.Model):
     song_uri = db.Column(db.String, nullable=False)
     song_name = db.Column(db.String, nullable=False)
     playlist_id = db.Column(db.String, db.ForeignKey("playlists.playlist_id"))
+    
+    def to_dict(self):
+        return {
+            "song_id": self.song_id,
+            "song_uri": self.song_uri,
+            "song_name": self.song_name,
+            "playlist_id": self.playlist_id
+        }
