@@ -1,8 +1,12 @@
 loadBingoCard();
 
-function songTileClicked(event) {
-    console.log("Song tile clicked: ", event.target.id);
-    event.target.classList.toggle('marked');
+// TODO: NEXT
+function verifyClickedTile(event) {
+    const clickedTileId = event.target.id;
+    console.log("Clicked tile ID: ", clickedTileId);
+
+    // Send request to server to verify if the clicked tile is correct
+    // fetch(`/spotify/playlists/verifySong?lobby_code=lobbyCode&song_title=${clickedTileId}`)
 }
 
 // Fetch Playlist JSON and build bingo card
@@ -35,7 +39,7 @@ async function loadBingoCard() {
                 tile.id = 'free-space';
                 tile.textContent = 'FREE SPACE';
                 tile.className = 'song-tile';
-                tile.addEventListener('click', songTileClicked);
+                tile.addEventListener('click', verifyClickedTile);
                 card.appendChild(tile);
             }
 
@@ -43,7 +47,7 @@ async function loadBingoCard() {
             tile.id = song;
             tile.textContent = song;
             tile.className = 'song-tile';
-            tile.addEventListener('click', songTileClicked);
+            tile.addEventListener('click', verifyClickedTile);
             card.appendChild(tile);
         });
 

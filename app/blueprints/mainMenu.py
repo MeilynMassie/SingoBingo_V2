@@ -17,6 +17,7 @@ def create_lobby():
     if not lobbyCode or not playlistMode or not playerMode:
         return jsonify({"ok": False, "error": "Missing something"}), 400
     GameState.create_game(lobbyCode)
+    print(GameState.get_game(lobbyCode).get_state())
     db_create_lobby(lobby_code=lobbyCode, player_mode=playerMode, playlist_mode=playlistMode)
     return jsonify({"ok": True,
                     "lobby_code": lobbyCode,

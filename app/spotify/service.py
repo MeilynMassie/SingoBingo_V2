@@ -14,7 +14,6 @@ class SpotifyService:
         self.sp.pause_playback()
 
     def getPlaylistDetails(self, playlist_uri, playlist_id):
-        print(f"playlist_uri: {playlist_uri}, playlist_id: {playlist_id}")
         playlist = self.sp.playlist(playlist_uri, fields="tracks.items(track(name,uri))")
 
         return [

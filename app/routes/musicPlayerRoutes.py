@@ -1,6 +1,8 @@
 # OVERVIEW: Routes for music player
 from flask import Blueprint, render_template
 from app.services.db_lobby_service import db_get_lobby
+from app.services.game_service import GameState
+
 
 musicPlayerRoutes_bp = Blueprint("musicPlayerRoutes", __name__)
 
@@ -20,6 +22,7 @@ def main_menu():
 def lobby(lobbyCode):
     lobbyExists = db_get_lobby(lobbyCode)
     print(lobbyExists)
+    print(GameState.get_game(lobbyCode).get_state())
     if not lobbyExists:
         return "Lobby not found", 404
     return render_template('lobby.html',lobbyCode=lobbyCode)
