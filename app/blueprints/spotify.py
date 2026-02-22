@@ -41,16 +41,16 @@ def spotify_get_selected_playlist():
     playlist_uri = data.get("playlist_uri")
     playlist_name = data.get("playlist_name")
     lobby_code = data.get("lobby_code")
-    print(f"playlist_id: {playlist_id}, playlist_uri: {playlist_uri}, song_name: {playlist_name}, lobby_code: {lobby_code}")
     if not playlist_id or not playlist_uri or not playlist_name or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
+    GameState.set_playlist_id_for_game(lobby_code, playlist_id)
     db_add_playlist_to_lobby(lobby_code=lobby_code, playlist_id=playlist_id)
     spotify = SpotifyService(g.sp)
     playlist_details = spotify.getPlaylistDetails(playlist_id=playlist_id, playlist_uri=playlist_uri)
     print(playlist_details)
     db_add_all_songs(playlist_details, playlist_id)
     return jsonify({"ok": True})  
-    
+
 
 # Returns a randomized playlist of 24 songs to front end
 # TODO: Start here tomorrow 
@@ -63,7 +63,6 @@ def spotify_get_playlist_songs():
     songs = db_get_songs_for_bingo_card(lobby_code)
     songs = [{"song_name": song.song_name, "song_uri": song.song_uri} for song in songs]
     random.shuffle(songs)
-    print("After shuffle")
     # TODO: Add game state stuff here later
     if user_type == 'player':
         print(f"Player songs: {songs}")
@@ -74,10 +73,12 @@ def spotify_get_playlist_songs():
             "ok": True,
             "songs": songs
         })
+    GameState.set_playlist_for_game(lobby_code, songs)
     return jsonify({
         "ok": True,
         "songs": songs
     })  
+
 
 # TODO: Start playing from the most popular parts of the song
 @spotify_bp.route('/spotify/playlists/playsong', methods=['GET'])
@@ -93,7 +94,6 @@ def play_song():
 @require_spotify
 def stop_song():
     spotify = SpotifyService(g.sp)
-    
     spotify.stopSong()
     return jsonify({"ok": True})
 
@@ -105,18 +105,3 @@ def test_play_song():
     spotify = SpotifyService(g.sp)
     spotify.playSong('spotify:track:28UMEtwyUUy5u0UWOVHwiI')
     return jsonify({"ok": True})
-
-@spotify_bp.route('/getGameState')
-def get_game_state():
-    lobby_code = request.args.get("lobby_code")
-    GameState.create_game_state(lobby_code)
-
-    # GameState.set_playlist(lobby_code, ["song1", "song2", "song3"])
-    print(GameState.get_game_state(lobby_code))
-    return jsonify({"ok": True, "data": GameState.get_game_state(lobby_code)})
-
-
-@spotify_bp.route('/test/everything')
-def test_ultima():
-    # TODO: Test all game state stuff here step by step
-    pass

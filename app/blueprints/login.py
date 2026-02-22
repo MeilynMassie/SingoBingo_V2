@@ -6,6 +6,7 @@ from app.services.db_player_service import (
     db_assign_avatar_to_player,
     db_mark_avatar_taken
 )
+from app.services.game_service import GameState
 
 
 login_bp = Blueprint('login', __name__)
@@ -19,6 +20,7 @@ def create_user():
     print(f"Creating user: {username}, Lobby Code: {lobby_code}")
     if not username or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
+    GameState.get_game(lobby_code).add_player(username)
     db_add_player(username=username, lobby_code=lobby_code)
     return jsonify({"ok": True})
 
