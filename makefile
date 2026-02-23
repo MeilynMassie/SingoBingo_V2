@@ -2,7 +2,9 @@
 PYTHON := .venv/bin/python
 FLASK  := .venv/bin/flask
 PIP := .venv/bin/pip
-APP_URL := http://127.0.0.1:5000/startGame/XKZCJ
+# APP_URL := http://127.0.0.1:5000//db/testGame
+APP_URL1 := http://127.0.0.1:5000/startGame/TESTS
+APP_URL2 := http://127.0.0.1:5000/bingoCard/TESTS
 # Initial setup
 setup:
 	@echo "STARTING: Creating .venv"
@@ -32,7 +34,12 @@ debug:
 	FLASK_DEBUG=1 \
 	$(FLASK) run --reload --debugger &
 	@sleep 1
-	@$(PYTHON) -m webbrowser $(APP_URL)
+# 	@echo "Creating GAMESTATE: TESTS"
+# 	@$(PYTHON) -m webbrowser $(APP_URL)
+	@echo "Loading spotify player for TESTS..."
+	@$(PYTHON) -m webbrowser $(APP_URL1)
+	@echo "Loading bingo card for TESTS..."
+	@$(PYTHON) -m webbrowser $(APP_URL2)
 	@wait
 
 # So I don't have to use the GUI anymore to debug

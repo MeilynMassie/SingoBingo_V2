@@ -55,15 +55,11 @@ function delay(ms) {
 // Shows which song is playing (mostly used to debug)
 // TODO: Add a reolad for when host choses playlist or not even run it till then
 async function displaySongCurrentlyPlaying() {
-    console.log("In displaySongCurrentlyPlaying")
     try {
         // Step 1: Retrieve playlist
-        const response = await fetch(
-            `/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=spotifyPlayer`
-        );
+        const response = await fetch(`/spotify/playlists/getMasterPlaylist?lobby_code=${lobbyCode}`);
         const data = await response.json();
         const songDetails = data.songs;
-        console.log(songDetails);
         showDiv('song-visual-container');
         const songVisualContainer = document.getElementById('song-visual-container');
 
@@ -82,6 +78,7 @@ async function displaySongCurrentlyPlaying() {
             await delay(15000); // Play song for 15
             await fetch('/spotify/playlists/stopsong');
             await delay(5000); // Stop song for 5
+            await fetch(`/spotify/playlists/nextIndex?lobby_code=${lobbyCode}`); // Move to next song in playlist
             // Step 5: Check for bingo
             if (someoneHasBingo) {
                 console.log(`/gameOver/${lobbyCode}`)

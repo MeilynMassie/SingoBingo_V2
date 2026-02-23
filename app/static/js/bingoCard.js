@@ -1,22 +1,24 @@
 loadBingoCard();
 
 // TODO: NEXT
-function verifyClickedTile(event) {
+async function verifyClickedTile(event) {
     const clickedTileId = event.target.id;
+    const lobbyCode = document.getElementById('lobby-code').value;
     console.log("Clicked tile ID: ", clickedTileId);
+    try {
+        fetch(`/spotify/playlists/verifySong?lobby_code=${lobbyCode}&song_title=${clickedTileId}`)
+    } catch (error) {
+        console.error('Error verifying clicked tile:', error);
+    }
 
-    // Send request to server to verify if the clicked tile is correct
-    // fetch(`/spotify/playlists/verifySong?lobby_code=lobbyCode&song_title=${clickedTileId}`)
 }
 
 // Fetch Playlist JSON and build bingo card
 async function loadBingoCard() {
     try {
         const lobbyCode = document.getElementById('lobby-code').value;
-        const response = await fetch(`/spotify/playlists/getSongs?lobby_code=${lobbyCode}&user_type=player`);
+        const response = await fetch(`/spotify/playlists/getPlayersSongs?lobby_code=${lobbyCode}`);
         const songs = await response.json();
-
-        console.log(songs.songs);
 
         // Create header
         const headerRow = document.getElementById('bingo-header-row');
