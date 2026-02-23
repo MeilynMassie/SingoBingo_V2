@@ -24,3 +24,18 @@ def create_lobby():
                     "player_mode": playerMode,
                     "playlist_mode": playlistMode
                     })
+
+# TODO: Create a test route to bypass lobby and user creation
+@mainMenu_bp.route('/db/testGame')
+def test_game():
+    lobbyCode = "TESTS"
+    playerMode = "singleplayer"
+    playlistMode = "classic"
+    GameState.create_game(lobbyCode)
+    print(GameState.get_game(lobbyCode).get_state())
+    db_create_lobby(lobby_code=lobbyCode, player_mode=playerMode, playlist_mode=playlistMode)
+    return jsonify({"ok": True,
+                    "lobby_code": lobbyCode,
+                    "player_mode": playerMode,
+                    "playlist_mode": playlistMode
+                    })

@@ -7,7 +7,6 @@ document.getElementById("login-form").addEventListener("submit", async function 
     try {
         // Wait for lobby codes from the server
         const listOfLobbyCodes = await fetchLobbyCode();
-        console.log(listOfLobbyCodes)
 
         if (listOfLobbyCodes.includes(lobbyCodeInput)) {
             console.log("I'm feeling wheee!")
@@ -31,8 +30,6 @@ async function fetchLobbyCode() {
 
 
 function addUser(username, lobbyCode) {
-    console.log(`Username: ${username}, Lobby Code: ${lobbyCode}`);
-
     fetch("/db/createUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,8 +51,6 @@ function addUser(username, lobbyCode) {
 
 function addAvatarToUser(avatarId) {
     const username = document.getElementById("username").value;
-    console.log(`Selected Avatar ID: ${avatarId} for user: ${username}`);
-
     fetch("/db/addAvatarSelected", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -85,16 +80,12 @@ function showAvatarSelection() {
         .then(response => response.json())
         .then(avatars => {
             avatars.forEach(avatar => {
-                console.log(avatar);
                 const imgElement = document.createElement('img');
-                console.log(`URL: ${avatar.filePath}`);
                 imgElement.src = avatar.filePath;
                 imgElement.id = avatar.id;
                 imgElement.className = 'avatar-image';
                 imgElement.addEventListener('click', () => {
                     const username = document.getElementById("username").value;
-                    console.log(`Selected Avatar ID: ${avatar.id} for user: ${username}`);
-
                     fetch("/db/addAvatarSelected", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

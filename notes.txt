@@ -28,6 +28,18 @@ FOR TESTING LOCALLY WIHTOUT RUNNING FLASK
 - Run > make test
 - Use keyword "assert" to return more detailed errors or use pytest
 
+REDIS COMMANDS
+- brew services start redis
+- brew services stop redis
+- brew services list
+- redis-cli
+  - PING
+  - KEYS *
+  - GET game:TESTS
+  - DEL game:TESTS
+  - FLUSHALL
+  - EXISTS game:TESTS
+
 PLAYER STATUS 
 - active
 - inactive
@@ -36,3 +48,12 @@ LOBBY STATUS
 - waiting
 - active
 - inactive
+
+
+NOTES FOR VERIFY SONG ERROR:
+Verifying song: Arcade 2019: ULTRACOMBO (From League of Legends: Season 9) for lobby: IUTVK
+GameState for IUTVK: {'status': 'waiting', 'players': [], 'playlist_id': None, 'playlist': [], 'index': 0, 'current_song': None, 'lobby_code': 'IUTVK'}
+Current song in game state: None
+Song clicked: Arcade 2019: ULTRACOMBO (From League of Legends: Season 9)
+Song verification failed.
+127.0.0.1 - - [19/Feb/2026 09:39:44] "GET /spotify/playlists/verifySong?lobby_code=IUTVK&song_title=Arcade%202019:%20ULTRACOMBO%20(From%20League%20of%20Legends:%20Season%209) HTTP/1.1" 200 -
