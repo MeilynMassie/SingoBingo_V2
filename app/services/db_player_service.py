@@ -31,3 +31,11 @@ def db_mark_avatar_taken(avatar_id: int):
     if avatar:
         avatar.taken = 1
         db.session.commit()
+
+def db_get_player_avatar(username: str):
+    player = Player.query.filter(func.lower(Player.username) == username.lower()).first()
+    print(f"Queried player: {player}")
+    if player and player.avatar_id:
+        avatar = Avatar.query.get(player.avatar_id)
+        return avatar
+    return None

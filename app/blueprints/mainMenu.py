@@ -25,7 +25,6 @@ def create_lobby():
                     "playlist_mode": playlistMode
                     })
 
-# TODO: Create a test route to bypass lobby and user creation
 @mainMenu_bp.route('/db/testGame')
 def test_game():
     lobbyCode = "TESTS"

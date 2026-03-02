@@ -1,5 +1,5 @@
 #OVERVIEW: Login page for user to create username, join lobby, and pick an avatar
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from app.services.db_player_service import (
     db_add_player, 
     db_get_avatars,
@@ -20,6 +20,8 @@ def create_user():
     print(f"Creating user: {username}, Lobby Code: {lobby_code}")
     if not username or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
+    session["username"] = username
+    session["lobbyCode"] = lobby_code
     GameState.get_game(lobby_code).add_player(username)
     db_add_player(username=username, lobby_code=lobby_code)
     return jsonify({"ok": True})

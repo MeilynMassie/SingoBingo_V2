@@ -1,16 +1,23 @@
+loadAvatar();
 loadBingoCard();
 
-// TODO: NEXT
+// TODO: NEXT FRFR - Add visuals for if the guess is wrong
 async function verifyClickedTile(event) {
-    const clickedTileId = event.target.id;
+    const clickedTile = event.target;
     const lobbyCode = document.getElementById('lobby-code').value;
-    console.log("Clicked tile ID: ", clickedTileId);
+    console.log("Clicked tile ID: ", clickedTile.id);
+    if (clickedTile.id === 'free-space') {
+        clickedTile.classList.add('marked');
+        return;
+    }
     try {
-        fetch(`/spotify/playlists/verifySong?lobby_code=${lobbyCode}&song_title=${clickedTileId}`)
+        const response = await fetch(`/spotify/playlists/verifySong?lobby_code=${lobbyCode}&song_title=${clickedTile.id}`);
+        res = await response.json();
+        console.log("Response from server: ", res);
+        if (res.ok) { clickedTile.classList.add('marked') };
     } catch (error) {
         console.error('Error verifying clicked tile:', error);
     }
-
 }
 
 // Fetch Playlist JSON and build bingo card
@@ -55,5 +62,28 @@ async function loadBingoCard() {
 
     } catch (error) {
         console.error('Error fetching JSON:', error);
+    }
+}
+
+async function loadAvatar() {
+    const username = document.getElementById("username").value;
+    if (!username) {
+        console.error("Username not found");
+        return;
+    }
+    console.log("Loading avatar for username:", username);
+    try {
+        const response = await fetch(`/db/getPlayerAvatar?username=${encodeURIComponent(username)}`);
+        const data = await response.json();
+        console.log("Avatar response data:", data);
+        if (data.ok && data.avatar_file_name) {
+            const avatarDisplay = document.getElementById('avatar-display');
+            avatarDisplay.className = 'avatar-display';
+            avatarDisplay.innerHTML = `<img src="/static/imgs/avatars/${data.avatar_file_name}" alt="Player Avatar" class="avatar-image">`;
+        } else {
+            console.error("Failed to load player avatar:", data.error);
+        }
+    } catch (error) {
+        console.error("Error loading player avatar:", error);
     }
 }

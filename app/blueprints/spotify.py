@@ -42,7 +42,9 @@ def spotify_get_selected_playlist():
     lobby_code = data.get("lobby_code")
     if not playlist_id or not playlist_uri or not playlist_name or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
-    GameState.set_playlist_id_for_game(lobby_code, playlist_id)
+    game = GameState.get_game(lobby_code=lobby_code)
+    game.reset_playlist()
+    game.set_playlist_id(playlist_id)
     db_add_playlist_to_lobby(lobby_code=lobby_code, playlist_id=playlist_id)
     spotify = SpotifyService(g.sp)
     playlist_details = spotify.getPlaylistDetails(playlist_id=playlist_id, playlist_uri=playlist_uri)
@@ -51,7 +53,6 @@ def spotify_get_selected_playlist():
 
 
 # Returns a randomized playlist of 24 songs to front end
-# TODO: Start here tomorrow 
 @spotify_bp.route('/spotify/playlists/getPlayersSongs', methods=['GET'])
 def spotify_get_playlist_songs():
     lobby_code = request.args.get("lobby_code")
@@ -59,13 +60,11 @@ def spotify_get_playlist_songs():
         return jsonify({"ok": False, "error": "Missing lobby_code"}), 400
     game = GameState.get_game(lobby_code=lobby_code)
     playlist = game.get_playlist()
-    print(f"Playlist from game state for lobby {lobby_code}: {playlist}")
     if playlist:
         songs = playlist 
     else:
         songs = db_get_songs_for_bingo_card(lobby_code)
-        game.set_playlist_for_game(lobby_code, songs)
-        print(f"Game state after setting playlist for lobby {lobby_code}: {game.get_state()}")
+        game.set_playlist(songs)
     random.shuffle(songs)
     songs = [song["song_name"] for song in songs]
     songs = songs[:24]
@@ -89,7 +88,6 @@ def spotify_get_master_playlist():
         songs = db_get_songs_for_bingo_card(lobby_code)
         random.shuffle(songs)
         game.set_playlist(songs)
-    game.reset_song_index_for_game(lobby_code) # TODO: Delete later, only for testing
     return jsonify({
         "ok": True,
         "songs": songs
@@ -100,17 +98,17 @@ def spotify_get_master_playlist():
 @spotify_bp.route('/spotify/playlists/playsong', methods=['GET'])
 @require_spotify
 def play_song():
-    song_uri = request.args.get("song_uri")
-    spotify = SpotifyService(g.sp)
-    spotify.playSong(song_uri)
+    # song_uri = request.args.get("song_uri")
+    # spotify = SpotifyService(g.sp)
+    # spotify.playSong(song_uri)
     # spotify.playSong('spotify:track:5p9UNx7gLRdRoaEHd8TAnz')
     return jsonify({"ok": True})
 
 @spotify_bp.route('/spotify/playlists/stopsong')
 @require_spotify
 def stop_song():
-    spotify = SpotifyService(g.sp)
-    spotify.stopSong()
+    # spotify = SpotifyService(g.sp)
+    # spotify.stopSong()
     return jsonify({"ok": True})
 
 @spotify_bp.route('/spotify/playlists/nextIndex')
@@ -140,7 +138,7 @@ def verify_song_clicked():
     selected_song = request.args.get("song_title")
     print(f"Verifying song: {selected_song} for lobby: {lobby_code}")
     game = GameState.get_game(lobby_code=lobby_code)
-    correct_song = game.get_current_song_for_game(lobby_code=lobby_code)
+    correct_song = game.get_current_song()
     print(f"Current song from game state: {correct_song}")
     if correct_song == selected_song:
         print("Song verified successfully!")
