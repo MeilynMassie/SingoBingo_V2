@@ -29,7 +29,7 @@ test:
 debug:
 	@lsof -ti:5000 | xargs kill || true
 	@echo "🚀 Starting Flask (debug + reload)..."
-	FLASK_APP=run.py \
+	FLASK_APP=app.py \
 	FLASK_ENV=development \
 	FLASK_DEBUG=1 \
 	$(FLASK) run --reload --debugger &

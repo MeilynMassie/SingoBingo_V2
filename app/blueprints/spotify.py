@@ -43,6 +43,7 @@ def spotify_get_selected_playlist():
     if not playlist_id or not playlist_uri or not playlist_name or not lobby_code:
         return jsonify({"ok": False, "error": "Missing something"}), 400
     game = GameState.get_game(lobby_code=lobby_code)
+    game.reset_bingo_players()  # Reset all players' bingo cards when a new playlist is selected
     game.reset_playlist()
     game.set_playlist_id(playlist_id)
     db_add_playlist_to_lobby(lobby_code=lobby_code, playlist_id=playlist_id)
@@ -56,9 +57,18 @@ def spotify_get_selected_playlist():
 @spotify_bp.route('/spotify/playlists/getPlayersSongs', methods=['GET'])
 def spotify_get_playlist_songs():
     lobby_code = request.args.get("lobby_code")
-    if not lobby_code:
-        return jsonify({"ok": False, "error": "Missing lobby_code"}), 400
+    username = request.args.get("username")
+    if not lobby_code or not username:
+        return jsonify({"ok": False, "error": "Missing lobby_code or username"}), 400
     game = GameState.get_game(lobby_code=lobby_code)
+    existing_player = game.get_player_state(username)
+    # TODO: Return JSON of marked tiles for this player to front end to update bingo card state on page refresh
+    if existing_player and existing_player["bingo_card"]:
+        return jsonify({
+            "ok": True,
+            "songs": existing_player["bingo_card"],
+            "marked_tiles": existing_player["marked_tiles"]
+    })
     playlist = game.get_playlist()
     if playlist:
         songs = playlist 
@@ -68,10 +78,12 @@ def spotify_get_playlist_songs():
     random.shuffle(songs)
     songs = [song["song_name"] for song in songs]
     songs = songs[:24]
+    songs.insert(12, "FREE SPACE")
+    game.add_bingo_player(username, songs)
     return jsonify({
         "ok": True,
         "songs": songs
-    })
+    })   
  
 @spotify_bp.route('/spotify/playlists/getMasterPlaylist', methods=['GET'])
 def spotify_get_master_playlist():
@@ -79,9 +91,7 @@ def spotify_get_master_playlist():
     if not lobby_code:
         return jsonify({"ok": False, "error": "Missing lobby_code"}), 400
     game = GameState.get_game(lobby_code=lobby_code)
-    print(f"Game state after setting playlist for lobby {lobby_code}: {game.get_state()}")
     playlist = game.get_playlist()
-    print(f"Playlist from game state for lobby {lobby_code}: {playlist}")
     if playlist:
         songs = playlist 
     else:
@@ -126,8 +136,8 @@ def next_index():
 @spotify_bp.route('/spotify/playlists/pausesong')
 @require_spotify
 def pause_song():
-    spotify = SpotifyService(g.sp)
-    spotify.pauseSong()
+    # spotify = SpotifyService(g.sp)
+    # spotify.pauseSong()
     return jsonify({"ok": True})
 
 
@@ -136,12 +146,20 @@ def pause_song():
 def verify_song_clicked():
     lobby_code = request.args.get("lobby_code")
     selected_song = request.args.get("song_title")
-    print(f"Verifying song: {selected_song} for lobby: {lobby_code}")
+    username = request.args.get("username")
+    print(f"Received request to verify song: {selected_song} for lobby: {lobby_code} and user: {username}")
     game = GameState.get_game(lobby_code=lobby_code)
     correct_song = game.get_current_song()
     print(f"Current song from game state: {correct_song}")
-    if correct_song == selected_song:
+    if correct_song == selected_song or selected_song == "FREE SPACE":
         print("Song verified successfully!")
+        game.mark_tile(username, selected_song)
+        player_state = game.get_player_state(username)
+        if len(player_state["marked_tiles"]) >= 5:
+            has_bingo = game.check_bingo(username)
+            if has_bingo:
+                game.set_winner(username)
+                return jsonify({"ok": True, "hasBingo": True})
         return jsonify({"ok": True})
     else:
         print("Song verification failed.")

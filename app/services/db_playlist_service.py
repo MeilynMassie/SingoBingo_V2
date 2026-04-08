@@ -54,6 +54,5 @@ def db_get_songs_for_bingo_card(lobby_code):
         ).fetchall() 
     if result is None: 
         print("Error retrieving songs for bingo")
-    print(f"Songs retrieved for lobby {lobby_code}: {result}")
     result = [dict(song_name=row.song_name, song_uri=row.song_uri) for row in result]
     return result
